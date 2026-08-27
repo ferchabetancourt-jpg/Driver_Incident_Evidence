@@ -35,6 +35,8 @@ export interface Dictionary {
     hasAccount: string;
     error: string;
     checkEmail: string;
+    emailNotConfirmed: string;
+    alreadyRegistered: string;
   };
   dashboard: {
     title: string;
@@ -136,6 +138,8 @@ export const dictionary: Record<Lang, Dictionary> = {
       hasAccount: "¿Ya tienes cuenta? Inicia sesión",
       error: "No se pudo completar la acción. Verifica tus datos.",
       checkEmail: "Revisa tu correo para confirmar la cuenta.",
+      emailNotConfirmed: "Confirma tu correo antes de iniciar sesión (revisa la bandeja de entrada).",
+      alreadyRegistered: "Ese correo ya tiene una cuenta. Inicia sesión en su lugar.",
     },
     dashboard: {
       title: "Inicio",
@@ -235,6 +239,8 @@ export const dictionary: Record<Lang, Dictionary> = {
       hasAccount: "Already have an account? Log in",
       error: "Could not complete the action. Check your details.",
       checkEmail: "Check your email to confirm your account.",
+      emailNotConfirmed: "Confirm your email before logging in (check your inbox).",
+      alreadyRegistered: "That email already has an account. Log in instead.",
     },
     dashboard: {
       title: "Home",

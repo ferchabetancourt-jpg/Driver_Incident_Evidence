@@ -2,11 +2,13 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useLanguage } from "@/lib/i18n/context";
 
 export default function SignupPage() {
   const { t } = useLanguage();
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -19,10 +21,16 @@ export default function SignupPage() {
     setError(null);
     setMessage(null);
     const supabase = createClient();
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabase.auth.signUp({ email, password });
     setLoading(false);
     if (error) {
-      setError(t.auth.error);
+      setError(error.message === "User already registered" ? t.auth.alreadyRegistered : t.auth.error);
+      return;
+    }
+    if (data.session) {
+      // Email confirmation is disabled, so signUp already returns a live session.
+      router.push("/dashboard");
+      router.refresh();
       return;
     }
     setMessage(t.auth.checkEmail);
