@@ -3,6 +3,7 @@ import { Inter, Manrope } from "next/font/google";
 import { createClient } from "@/lib/supabase/server";
 import { LanguageProvider } from "@/lib/i18n/context";
 import { Nav } from "@/components/Nav";
+import { ScrollResetOnNavigate } from "@/components/ScrollResetOnNavigate";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -33,10 +34,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang={initialLang} className={`${inter.variable} ${manrope.variable}`}>
-      <body className="font-sans">
+      <body className="flex min-h-dvh flex-col bg-background font-sans">
         <LanguageProvider initialLang={initialLang}>
+          <ScrollResetOnNavigate />
           <Nav />
-          <main className="mx-auto max-w-3xl px-4 pb-6 pt-20">{children}</main>
+          <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-6 pt-20">{children}</main>
         </LanguageProvider>
       </body>
     </html>
