@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/context";
-import { formatStationLabel, type Block, type Station } from "@/lib/types";
-import { createBlock } from "./actions";
+import { formatPayAmount, formatStationLabel, type Block, type Station } from "@/lib/types";
+import { DeleteBlockButton } from "@/components/DeleteBlockButton";
+import { createBlock, deleteBlock } from "./actions";
 
 function todayIso() {
   return new Date().toISOString().slice(0, 10);
@@ -53,6 +54,17 @@ export function BlocksClient({ blocks, stations }: { blocks: Block[]; stations: 
         <label className="block text-sm text-gray-600">{t.blocks.endTime}</label>
         <input type="time" name="end_time" className="w-full rounded-md border border-gray-300 px-3 py-2" />
 
+        <label className="block text-sm text-gray-600">{t.blocks.payAmount}</label>
+        <input
+          type="number"
+          name="pay_amount"
+          min="0"
+          step="0.01"
+          inputMode="decimal"
+          required
+          className="w-full rounded-md border border-gray-300 px-3 py-2"
+        />
+
         <button
           type="submit"
           disabled={stations.length === 0}
@@ -79,12 +91,18 @@ export function BlocksClient({ blocks, stations }: { blocks: Block[]; stations: 
             <div>
               <p className="font-medium">
                 {block.block_date} · {block.start_time}
+                {formatPayAmount(block.pay_amount) && (
+                  <span className="ml-2 text-success">{formatPayAmount(block.pay_amount)}</span>
+                )}
               </p>
               <p className="text-sm text-gray-500">{formatStationLabel(block.stations)}</p>
             </div>
-            <Link href={`/blocks/${block.id}`} className="text-sm text-brand-600 hover:underline">
-              {t.blocks.viewDetail}
-            </Link>
+            <div className="flex items-center gap-1">
+              <Link href={`/blocks/${block.id}`} className="text-sm text-brand-600 hover:underline">
+                {t.blocks.viewDetail}
+              </Link>
+              <DeleteBlockButton onDelete={() => deleteBlock(block.id)} />
+            </div>
           </li>
         ))}
       </ul>

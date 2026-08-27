@@ -67,9 +67,12 @@ export interface Dictionary {
     startTime: string;
     endTime: string;
     station: string;
+    payAmount: string;
     save: string;
     none: string;
     viewDetail: string;
+    deleteConfirm: string;
+    delete: string;
   };
   incident: {
     quickCapture: string;
@@ -180,9 +183,12 @@ export const dictionary: Record<Lang, Dictionary> = {
       startTime: "Hora de inicio",
       endTime: "Hora de fin (opcional)",
       station: "Estación",
+      payAmount: "Valor a pagar ($)",
       save: "Guardar bloque",
       none: "Todavía no tienes bloques registrados.",
       viewDetail: "Ver detalle",
+      deleteConfirm: "¿Borrar este bloque? Se eliminarán también sus incidentes y evidencia. Esta acción no se puede deshacer.",
+      delete: "Borrar bloque",
     },
     incident: {
       quickCapture: "Incidente rápido",
@@ -284,9 +290,12 @@ export const dictionary: Record<Lang, Dictionary> = {
       startTime: "Start time",
       endTime: "End time (optional)",
       station: "Station",
+      payAmount: "Pay amount ($)",
       save: "Save block",
       none: "You don't have any blocks yet.",
       viewDetail: "View detail",
+      deleteConfirm: "Delete this block? Its incidents and evidence will be deleted too. This cannot be undone.",
+      delete: "Delete block",
     },
     incident: {
       quickCapture: "Quick incident",

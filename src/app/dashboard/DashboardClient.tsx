@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/context";
-import { formatStationLabel, type Block, type Incident } from "@/lib/types";
+import { formatPayAmount, formatStationLabel, type Block, type Incident } from "@/lib/types";
 import { IncidentList } from "@/components/IncidentList";
 
 export function DashboardClient({
@@ -25,6 +25,9 @@ export function DashboardClient({
             <div>
               <p className="font-medium">
                 {activeBlock.block_date} · {activeBlock.start_time}
+                {formatPayAmount(activeBlock.pay_amount) && (
+                  <span className="ml-2 text-success">{formatPayAmount(activeBlock.pay_amount)}</span>
+                )}
               </p>
               <p className="text-sm text-gray-500">{formatStationLabel(activeBlock.stations)}</p>
             </div>

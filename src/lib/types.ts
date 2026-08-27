@@ -68,9 +68,15 @@ export interface Block {
   start_time: string;
   end_time: string | null;
   duration_minutes: number | null;
+  pay_amount: number | null;
   source: "manual" | "screenshot";
   created_at: string;
   stations?: Station;
+}
+
+export function formatPayAmount(amount: number | null | undefined) {
+  if (amount === null || amount === undefined) return null;
+  return `$${amount.toFixed(2)}`;
 }
 
 export interface PackageRecord {
