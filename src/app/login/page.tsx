@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -30,8 +31,12 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="mx-auto mt-16 max-w-sm">
-      <h1 className="mb-6 text-xl font-semibold">{t.auth.loginTitle}</h1>
+    <div className="mx-auto flex min-h-dvh max-w-sm flex-col justify-center px-4 py-10">
+      <div className="mb-6 flex flex-col items-center">
+        <Image src="/logo-transparent.png" alt="" width={72} height={72} className="h-16 w-16" />
+        <span className="mt-2 font-display text-lg font-semibold text-navy">{t.appName}</span>
+      </div>
+      <h1 className="mb-6 text-center text-xl font-semibold">{t.auth.loginTitle}</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <label className="block text-sm font-medium text-gray-700">{t.auth.email}</label>
@@ -65,6 +70,9 @@ export default function LoginPage() {
       <Link href="/signup" className="mt-4 block text-center text-sm text-brand-600">
         {t.auth.noAccount}
       </Link>
+      <p className="mt-10 text-center text-xs text-slate/70">
+        © {new Date().getFullYear()} María Fernanda Betancourt
+      </p>
     </div>
   );
 }
