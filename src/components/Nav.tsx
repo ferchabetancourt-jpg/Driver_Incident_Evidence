@@ -7,13 +7,7 @@ import { useEffect, useState } from "react";
 import { useLanguage } from "@/lib/i18n/context";
 import { createClient } from "@/lib/supabase/client";
 import { LanguageToggle } from "./LanguageToggle";
-import {
-  HomeIcon,
-  LogoutIcon,
-  SearchIcon,
-  StationIcon,
-  BlockIcon,
-} from "./icons";
+import { HomeIcon, LogoutIcon, SearchIcon, StationIcon, BlockIcon } from "./icons";
 
 export function Nav() {
   const { t } = useLanguage();
@@ -36,11 +30,11 @@ export function Nav() {
     router.refresh();
   }
 
-  const menuItems = [
-    { href: "/dashboard", label: t.nav.dashboard, subtitle: t.dashboard.title, Icon: HomeIcon },
-    { href: "/stations", label: t.nav.stations, subtitle: t.stations.title, Icon: StationIcon },
-    { href: "/blocks", label: t.nav.blocks, subtitle: t.blocks.title, Icon: BlockIcon },
-    { href: "/search", label: t.nav.search, subtitle: t.search.title, Icon: SearchIcon },
+  const tabs = [
+    { href: "/dashboard", label: t.nav.dashboard, Icon: HomeIcon },
+    { href: "/stations", label: t.nav.stations, Icon: StationIcon },
+    { href: "/blocks", label: t.nav.blocks, Icon: BlockIcon },
+    { href: "/search", label: t.nav.search, Icon: SearchIcon },
   ];
 
   return (
@@ -61,28 +55,31 @@ export function Nav() {
         <LanguageToggle />
       </header>
 
+      <nav className="fixed inset-x-0 top-16 z-40 flex h-12 items-stretch justify-around border-b border-navy/10 bg-surface shadow-sm">
+        {tabs.map(({ href, label, Icon }) => {
+          const active = pathname?.startsWith(href);
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={`flex flex-1 flex-col items-center justify-center gap-0.5 text-[11px] font-medium ${
+                active ? "text-brand-600" : "text-slate"
+              }`}
+            >
+              <Icon />
+              <span>{label}</span>
+              <span className={`h-0.5 w-8 rounded-full ${active ? "bg-brand-600" : "bg-transparent"}`} />
+            </Link>
+          );
+        })}
+      </nav>
+
       {menuOpen && (
-        <div className="fixed inset-0 top-16 z-30 bg-black/30" onClick={() => setMenuOpen(false)}>
+        <div className="fixed inset-0 top-28 z-30 bg-black/30" onClick={() => setMenuOpen(false)}>
           <nav
             className="mx-auto max-w-3xl space-y-2 bg-background p-3"
             onClick={(e) => e.stopPropagation()}
           >
-            {menuItems.map(({ href, label, subtitle, Icon }) => (
-              <Link
-                key={href}
-                href={href}
-                className="flex items-center gap-3 rounded-xl bg-surface p-4 shadow-sm"
-              >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-navy">
-                  <Icon />
-                </span>
-                <span className="flex-1">
-                  <span className="block font-semibold text-navy">{label}</span>
-                  <span className="block text-sm text-slate">{subtitle}</span>
-                </span>
-                <span className="text-brand-500">›</span>
-              </Link>
-            ))}
             <button
               type="button"
               onClick={logout}

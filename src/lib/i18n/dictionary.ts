@@ -122,6 +122,13 @@ export interface Dictionary {
   };
 }
 
+export const COMMUNICATION_TYPE_LABELS: Record<string, { es: string; en: string }> = {
+  support_call: { es: "Llamada a Soporte", en: "Support call" },
+  support_email: { es: "Email recibido de Amazon", en: "Email received from Amazon" },
+  driver_email: { es: "Email enviado a Amazon", en: "Email sent to Amazon" },
+  other: { es: "Otro", en: "Other" },
+};
+
 export const dictionary: Record<Lang, Dictionary> = {
   es: {
     appName: "Bitácora de Incidentes",

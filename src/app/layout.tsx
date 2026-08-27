@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Manrope } from "next/font/google";
 import { createClient } from "@/lib/supabase/server";
 import { LanguageProvider } from "@/lib/i18n/context";
@@ -12,6 +12,15 @@ const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
 export const metadata: Metadata = {
   title: "Driver Incident Evidence",
   description: "Bitácora de incidentes para conductores de reparto",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Bitácora de Incidentes",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#162B3A",
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -38,7 +47,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <LanguageProvider initialLang={initialLang}>
           <ScrollResetOnNavigate />
           <Nav />
-          <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-6 pt-20">{children}</main>
+          <main className="mx-auto w-full max-w-3xl flex-1 px-4 pb-6 pt-28">{children}</main>
         </LanguageProvider>
       </body>
     </html>

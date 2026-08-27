@@ -1,7 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/lib/i18n/context";
-import { CATEGORY_LABELS } from "@/lib/i18n/dictionary";
+import { CATEGORY_LABELS, COMMUNICATION_TYPE_LABELS } from "@/lib/i18n/dictionary";
 import { formatStationLabel, type CommunicationRecord, type Incident } from "@/lib/types";
 import { addCommunication } from "../actions";
 
@@ -69,7 +69,7 @@ export function IncidentDetailClient({
         <ul className="mt-2 space-y-2">
           {communications.map((comm) => (
             <li key={comm.id} className="rounded-md bg-gray-50 p-3 text-sm">
-              <p className="font-medium">{comm.type}</p>
+              <p className="font-medium">{COMMUNICATION_TYPE_LABELS[comm.type]?.[lang] ?? comm.type}</p>
               {comm.summary && <p className="text-gray-600">{comm.summary}</p>}
               {comm.reference && <p className="text-xs text-gray-400">Ref: {comm.reference}</p>}
             </li>
@@ -84,10 +84,11 @@ export function IncidentDetailClient({
         >
           <h3 className="text-xs font-medium uppercase text-gray-500">{t.incident.addCommunication}</h3>
           <select name="type" className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm">
-            <option value="support_call">support_call</option>
-            <option value="support_email">support_email</option>
-            <option value="driver_email">driver_email</option>
-            <option value="other">other</option>
+            {Object.entries(COMMUNICATION_TYPE_LABELS).map(([value, labels]) => (
+              <option key={value} value={value}>
+                {labels[lang]}
+              </option>
+            ))}
           </select>
           <textarea
             name="summary"
