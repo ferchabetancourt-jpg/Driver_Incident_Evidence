@@ -9,7 +9,9 @@ export type IncidentCategory =
   | "delivery_instructions"
   | "vehicle_route_issue"
   | "weather_or_external"
-  | "support_instruction"
+  | "support_call"
+  | "email_to_amazon"
+  | "email_from_amazon"
   | "other";
 
 export const INCIDENT_CATEGORIES: IncidentCategory[] = [
@@ -23,7 +25,9 @@ export const INCIDENT_CATEGORIES: IncidentCategory[] = [
   "delivery_instructions",
   "vehicle_route_issue",
   "weather_or_external",
-  "support_instruction",
+  "support_call",
+  "email_to_amazon",
+  "email_from_amazon",
   "other",
 ];
 
@@ -49,6 +53,11 @@ export interface Station {
   address: string | null;
   active: boolean;
   created_at: string;
+}
+
+export function formatStationLabel(station: Pick<Station, "name" | "station_code"> | null | undefined) {
+  if (!station) return "";
+  return station.station_code ? `${station.name} (${station.station_code})` : station.name;
 }
 
 export interface Block {

@@ -2,7 +2,7 @@
 
 import { useLanguage } from "@/lib/i18n/context";
 import { CATEGORY_LABELS } from "@/lib/i18n/dictionary";
-import { INCIDENT_CATEGORIES } from "@/lib/types";
+import { INCIDENT_CATEGORIES, formatStationLabel } from "@/lib/types";
 import type { Incident, Station } from "@/lib/types";
 import { IncidentList } from "@/components/IncidentList";
 
@@ -32,7 +32,7 @@ export function SearchClient({
             <option value="">{t.search.any}</option>
             {stations.map((station) => (
               <option key={station.id} value={station.id}>
-                {station.name}
+                {formatStationLabel(station)}
               </option>
             ))}
           </select>

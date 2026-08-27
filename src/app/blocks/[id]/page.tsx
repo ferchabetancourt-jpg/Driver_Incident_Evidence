@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import type { Block, Incident } from "@/lib/types";
+import { formatStationLabel, type Block, type Incident } from "@/lib/types";
 import { QuickIncidentForm } from "@/components/QuickIncidentForm";
 import { IncidentList } from "@/components/IncidentList";
 
@@ -26,7 +26,7 @@ export default async function BlockDetailPage({ params }: { params: { id: string
     <div className="space-y-6">
       <div>
         <Link href="/blocks" className="text-sm text-brand-600 hover:underline">
-          ← {(block as Block).stations?.name}
+          ← {formatStationLabel((block as Block).stations)}
         </Link>
         <h1 className="text-xl font-semibold">
           {(block as Block).block_date} · {(block as Block).start_time}

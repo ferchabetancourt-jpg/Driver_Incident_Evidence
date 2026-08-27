@@ -11,7 +11,9 @@ export const CATEGORY_LABELS: Record<string, { es: string; en: string }> = {
   delivery_instructions: { es: "Problema con instrucciones de entrega", en: "Delivery instructions problem" },
   vehicle_route_issue: { es: "Problema de vehículo/ruta", en: "Vehicle/route issue" },
   weather_or_external: { es: "Clima u otra condición externa", en: "Weather or other external condition" },
-  support_instruction: { es: "Instrucción de Soporte Amazon", en: "Amazon Support instruction" },
+  support_call: { es: "Llamada a la línea de Soporte", en: "Support line call" },
+  email_to_amazon: { es: "Email enviado a Amazon", en: "Email sent to Amazon" },
+  email_from_amazon: { es: "Email recibido de Amazon", en: "Email received from Amazon" },
   other: { es: "Otro", en: "Other" },
 };
 

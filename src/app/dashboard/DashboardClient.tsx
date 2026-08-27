@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/context";
-import type { Block, Incident } from "@/lib/types";
+import { formatStationLabel, type Block, type Incident } from "@/lib/types";
 import { IncidentList } from "@/components/IncidentList";
 
 export function DashboardClient({
@@ -26,7 +26,7 @@ export function DashboardClient({
               <p className="font-medium">
                 {activeBlock.block_date} · {activeBlock.start_time}
               </p>
-              <p className="text-sm text-gray-500">{activeBlock.stations?.name}</p>
+              <p className="text-sm text-gray-500">{formatStationLabel(activeBlock.stations)}</p>
             </div>
             <Link
               href={`/blocks/${activeBlock.id}`}

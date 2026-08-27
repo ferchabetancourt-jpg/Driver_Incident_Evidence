@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/context";
-import type { Block, Station } from "@/lib/types";
+import { formatStationLabel, type Block, type Station } from "@/lib/types";
 import { createBlock } from "./actions";
 
 function todayIso() {
@@ -28,7 +28,7 @@ export function BlocksClient({ blocks, stations }: { blocks: Block[]; stations: 
         <select name="station_id" required className="w-full rounded-md border border-gray-300 px-3 py-2">
           {stations.map((station) => (
             <option key={station.id} value={station.id}>
-              {station.name}
+              {formatStationLabel(station)}
             </option>
           ))}
         </select>
@@ -80,7 +80,7 @@ export function BlocksClient({ blocks, stations }: { blocks: Block[]; stations: 
               <p className="font-medium">
                 {block.block_date} · {block.start_time}
               </p>
-              <p className="text-sm text-gray-500">{block.stations?.name}</p>
+              <p className="text-sm text-gray-500">{formatStationLabel(block.stations)}</p>
             </div>
             <Link href={`/blocks/${block.id}`} className="text-sm text-brand-600 hover:underline">
               {t.blocks.viewDetail}
