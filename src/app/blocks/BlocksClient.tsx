@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/context";
-import { formatPayAmount, formatStationLabel, type Block, type Station } from "@/lib/types";
+import { formatPayAmount, formatStationLabel, formatTime12h, type Block, type Station } from "@/lib/types";
 import { DeleteBlockButton } from "@/components/DeleteBlockButton";
 import { createBlock, deleteBlock } from "./actions";
 
@@ -90,7 +90,7 @@ export function BlocksClient({ blocks, stations }: { blocks: Block[]; stations: 
           >
             <div>
               <p className="font-medium">
-                {block.block_date} · {block.start_time}
+                {block.block_date} · {formatTime12h(block.start_time)}
                 {formatPayAmount(block.pay_amount) && (
                   <span className="ml-2 text-success">{formatPayAmount(block.pay_amount)}</span>
                 )}

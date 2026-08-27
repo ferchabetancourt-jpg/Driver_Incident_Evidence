@@ -2,17 +2,25 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/context";
-import { formatPayAmount, formatStationLabel, type Block, type Incident } from "@/lib/types";
+import {
+  formatPayAmount,
+  formatStationLabel,
+  formatTime12h,
+  isBlockActiveNow,
+  type Block,
+  type Incident,
+} from "@/lib/types";
 import { IncidentList } from "@/components/IncidentList";
 
 export function DashboardClient({
-  activeBlock,
+  recentBlocks,
   recentIncidents,
 }: {
-  activeBlock: Block | null;
+  recentBlocks: Block[];
   recentIncidents: Incident[];
 }) {
   const { t } = useLanguage();
+  const activeBlock = recentBlocks.find((block) => isBlockActiveNow(block)) ?? null;
 
   return (
     <div className="space-y-6">
@@ -24,7 +32,7 @@ export function DashboardClient({
           <div className="mt-2 flex items-center justify-between">
             <div>
               <p className="font-medium">
-                {activeBlock.block_date} · {activeBlock.start_time}
+                {activeBlock.block_date} · {formatTime12h(activeBlock.start_time)}
                 {formatPayAmount(activeBlock.pay_amount) && (
                   <span className="ml-2 text-success">{formatPayAmount(activeBlock.pay_amount)}</span>
                 )}

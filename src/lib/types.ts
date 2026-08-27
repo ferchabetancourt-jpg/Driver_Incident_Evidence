@@ -79,6 +79,35 @@ export function formatPayAmount(amount: number | null | undefined) {
   return `$${amount.toFixed(2)}`;
 }
 
+// Formats a "HH:MM" or "HH:MM:SS" time string as 12-hour ("6:30 PM"),
+// without constructing a Date (avoids timezone conversion entirely).
+export function formatTime12h(time: string | null | undefined) {
+  if (!time) return "";
+  const [hStr, mStr] = time.split(":");
+  const hours = parseInt(hStr, 10);
+  if (Number.isNaN(hours)) return time;
+  const period = hours >= 12 ? "PM" : "AM";
+  const hour12 = hours % 12 || 12;
+  return `${hour12}:${mStr} ${period}`;
+}
+
+// A block is "in progress" if the current local time falls within its
+// start/end time on its date. Without an end_time, treat it as active
+// only for a default 10-hour window from its start (a typical Flex
+// block), so it doesn't stay "active" indefinitely.
+const DEFAULT_BLOCK_DURATION_HOURS = 10;
+
+export function isBlockActiveNow(block: Pick<Block, "block_date" | "start_time" | "end_time">, now = new Date()) {
+  const start = new Date(`${block.block_date}T${block.start_time}`);
+  if (Number.isNaN(start.getTime())) return false;
+
+  const end = block.end_time
+    ? new Date(`${block.block_date}T${block.end_time}`)
+    : new Date(start.getTime() + DEFAULT_BLOCK_DURATION_HOURS * 60 * 60 * 1000);
+
+  return now >= start && now <= end;
+}
+
 export interface PackageRecord {
   id: string;
   block_id: string;

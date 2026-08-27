@@ -2,7 +2,7 @@
 
 import { useLanguage } from "@/lib/i18n/context";
 import { CATEGORY_LABELS, COMMUNICATION_TYPE_LABELS } from "@/lib/i18n/dictionary";
-import { formatStationLabel, type CommunicationRecord, type Incident } from "@/lib/types";
+import { formatStationLabel, formatTime12h, type CommunicationRecord, type Incident } from "@/lib/types";
 import { addCommunication } from "../actions";
 
 interface EvidenceWithUrl {
@@ -36,7 +36,8 @@ export function IncidentDetailClient({
         </p>
         {incident.blocks && (
           <p className="text-sm text-gray-500">
-            {formatStationLabel(incident.blocks.stations)} · {incident.blocks.block_date} · {incident.blocks.start_time}
+            {formatStationLabel(incident.blocks.stations)} · {incident.blocks.block_date} ·{" "}
+            {formatTime12h(incident.blocks.start_time)}
           </p>
         )}
       </div>

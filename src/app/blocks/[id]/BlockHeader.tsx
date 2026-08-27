@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { formatPayAmount, formatStationLabel, type Block } from "@/lib/types";
+import { formatPayAmount, formatStationLabel, formatTime12h, type Block } from "@/lib/types";
 import { DeleteBlockButton } from "@/components/DeleteBlockButton";
 import { deleteBlock } from "../actions";
 
@@ -13,7 +13,7 @@ export function BlockHeader({ block }: { block: Block }) {
           ← {formatStationLabel(block.stations)}
         </Link>
         <h1 className="text-xl font-semibold">
-          {block.block_date} · {block.start_time}
+          {block.block_date} · {formatTime12h(block.start_time)}
           {formatPayAmount(block.pay_amount) && (
             <span className="ml-2 text-success">{formatPayAmount(block.pay_amount)}</span>
           )}

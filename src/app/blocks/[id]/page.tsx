@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Block, Incident } from "@/lib/types";
-import { QuickIncidentForm } from "@/components/QuickIncidentForm";
+import { QuickIncidentToggle } from "@/components/QuickIncidentToggle";
 import { IncidentList } from "@/components/IncidentList";
 import { BlockHeader } from "./BlockHeader";
 
@@ -26,7 +26,7 @@ export default async function BlockDetailPage({ params }: { params: { id: string
     <div className="space-y-6">
       <BlockHeader block={block as Block} />
 
-      <QuickIncidentForm blockId={params.id} />
+      <QuickIncidentToggle blockId={params.id} />
 
       <IncidentList incidents={(incidents as Incident[]) ?? []} />
     </div>

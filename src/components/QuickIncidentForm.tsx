@@ -8,7 +8,15 @@ import { CATEGORY_LABELS } from "@/lib/i18n/dictionary";
 import { INCIDENT_CATEGORIES, type IncidentCategory, type IncidentScope } from "@/lib/types";
 import { AudioRecorder } from "./AudioRecorder";
 
-export function QuickIncidentForm({ blockId }: { blockId: string }) {
+export function QuickIncidentForm({
+  blockId,
+  onSaved,
+  onCancel,
+}: {
+  blockId: string;
+  onSaved?: () => void;
+  onCancel?: () => void;
+}) {
   const { t, lang } = useLanguage();
   const router = useRouter();
 
@@ -96,6 +104,7 @@ export function QuickIncidentForm({ blockId }: { blockId: string }) {
       setAudioBlob(null);
       setPhotoFile(null);
       router.refresh();
+      onSaved?.();
     } catch (err) {
       setError(err instanceof Error ? err.message : t.auth.error);
     } finally {
@@ -105,7 +114,14 @@ export function QuickIncidentForm({ blockId }: { blockId: string }) {
 
   return (
     <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4">
-      <h2 className="text-sm font-medium text-gray-700">{t.incident.quickCapture}</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-sm font-medium text-gray-700">{t.incident.quickCapture}</h2>
+        {onCancel && (
+          <button type="button" onClick={onCancel} className="text-sm text-slate">
+            {t.common.cancel}
+          </button>
+        )}
+      </div>
 
       <div>
         <p className="mb-1 text-sm text-gray-600">{t.incident.scope}</p>

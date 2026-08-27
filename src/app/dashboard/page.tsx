@@ -5,12 +5,12 @@ import { DashboardClient } from "./DashboardClient";
 export default async function DashboardPage() {
   const supabase = createClient();
 
-  const { data: activeBlock } = await supabase
+  const { data: recentBlocks } = await supabase
     .from("blocks")
     .select("*, stations(*)")
-    .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+    .order("block_date", { ascending: false })
+    .order("start_time", { ascending: false })
+    .limit(5);
 
   const { data: recentIncidents } = await supabase
     .from("incidents")
@@ -20,7 +20,7 @@ export default async function DashboardPage() {
 
   return (
     <DashboardClient
-      activeBlock={(activeBlock as Block) ?? null}
+      recentBlocks={(recentBlocks as Block[]) ?? []}
       recentIncidents={(recentIncidents as Incident[]) ?? []}
     />
   );
