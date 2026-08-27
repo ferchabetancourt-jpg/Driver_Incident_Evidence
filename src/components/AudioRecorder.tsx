@@ -7,6 +7,20 @@ interface AudioRecorderProps {
   onRecorded: (blob: Blob | null) => void;
 }
 
+const CANDIDATE_MIME_TYPES = [
+  "audio/mp4",
+  "audio/webm;codecs=opus",
+  "audio/webm",
+  "audio/ogg;codecs=opus",
+];
+
+function pickSupportedMimeType(): string | undefined {
+  if (typeof MediaRecorder === "undefined" || !MediaRecorder.isTypeSupported) {
+    return undefined;
+  }
+  return CANDIDATE_MIME_TYPES.find((type) => MediaRecorder.isTypeSupported(type));
+}
+
 export function AudioRecorder({ onRecorded }: AudioRecorderProps) {
   const { t } = useLanguage();
   const [recording, setRecording] = useState(false);
@@ -17,17 +31,47 @@ export function AudioRecorder({ onRecorded }: AudioRecorderProps) {
 
   async function startRecording() {
     setError(null);
+
+    if (typeof navigator === "undefined" || !navigator.mediaDevices?.getUserMedia) {
+      setError(t.incident.micUnsupported);
+      return;
+    }
+    if (typeof MediaRecorder === "undefined") {
+      setError(t.incident.micUnsupported);
+      return;
+    }
+
+    let stream: MediaStream;
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const recorder = new MediaRecorder(stream);
+      stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    } catch (err) {
+      const name = err instanceof DOMException ? err.name : "";
+      if (name === "NotAllowedError" || name === "SecurityError") {
+        setError(t.incident.micDenied);
+      } else if (name === "NotFoundError") {
+        setError(t.incident.micNotFound);
+      } else {
+        setError(t.incident.micError);
+      }
+      return;
+    }
+
+    try {
+      const mimeType = pickSupportedMimeType();
+      const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
       chunksRef.current = [];
 
       recorder.ondataavailable = (event) => {
         if (event.data.size > 0) chunksRef.current.push(event.data);
       };
 
+      recorder.onerror = () => {
+        setError(t.incident.micError);
+        stream.getTracks().forEach((track) => track.stop());
+      };
+
       recorder.onstop = () => {
-        const blob = new Blob(chunksRef.current, { type: "audio/webm" });
+        const blob = new Blob(chunksRef.current, { type: recorder.mimeType || mimeType || "audio/webm" });
         setAudioUrl(URL.createObjectURL(blob));
         onRecorded(blob);
         stream.getTracks().forEach((track) => track.stop());
@@ -38,6 +82,7 @@ export function AudioRecorder({ onRecorded }: AudioRecorderProps) {
       setRecording(true);
     } catch {
       setError(t.incident.micError);
+      stream.getTracks().forEach((track) => track.stop());
     }
   }
 
@@ -57,7 +102,7 @@ export function AudioRecorder({ onRecorded }: AudioRecorderProps) {
         <button
           type="button"
           onClick={startRecording}
-          className="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+          className="rounded-md bg-danger px-4 py-2 text-sm font-medium text-white hover:opacity-90"
         >
           🎙 {t.incident.record}
         </button>
@@ -66,7 +111,7 @@ export function AudioRecorder({ onRecorded }: AudioRecorderProps) {
         <button
           type="button"
           onClick={stopRecording}
-          className="animate-pulse rounded-md bg-gray-800 px-4 py-2 text-sm font-medium text-white"
+          className="animate-pulse rounded-md bg-navy px-4 py-2 text-sm font-medium text-white"
         >
           ⏹ {t.incident.stop} — {t.incident.recording}
         </button>
@@ -74,12 +119,12 @@ export function AudioRecorder({ onRecorded }: AudioRecorderProps) {
       {audioUrl && (
         <div className="flex items-center gap-2">
           <audio controls src={audioUrl} className="h-8" />
-          <button type="button" onClick={clearRecording} className="text-xs text-gray-500 underline">
+          <button type="button" onClick={clearRecording} className="text-xs text-slate underline">
             {t.common.delete}
           </button>
         </div>
       )}
-      {error && <p className="text-xs text-red-600">{error}</p>}
+      {error && <p className="text-xs text-danger">{error}</p>}
     </div>
   );
 }

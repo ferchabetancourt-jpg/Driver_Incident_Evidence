@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
+import { Inter, Manrope } from "next/font/google";
 import { createClient } from "@/lib/supabase/server";
 import { LanguageProvider } from "@/lib/i18n/context";
 import { Nav } from "@/components/Nav";
 import "./globals.css";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const manrope = Manrope({ subsets: ["latin"], variable: "--font-manrope" });
 
 export const metadata: Metadata = {
   title: "Driver Incident Evidence",
@@ -28,11 +32,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   }
 
   return (
-    <html lang={initialLang}>
-      <body>
+    <html lang={initialLang} className={`${inter.variable} ${manrope.variable}`}>
+      <body className="font-sans">
         <LanguageProvider initialLang={initialLang}>
           <Nav />
-          <main className="mx-auto max-w-3xl px-4 py-6">{children}</main>
+          <main className="mx-auto max-w-3xl px-4 pb-6 pt-20">{children}</main>
         </LanguageProvider>
       </body>
     </html>

@@ -82,6 +82,9 @@ export interface Dictionary {
     playback: string;
     photo: string;
     micError: string;
+    micDenied: string;
+    micNotFound: string;
+    micUnsupported: string;
     save: string;
     saving: string;
     saved: string;
@@ -184,7 +187,10 @@ export const dictionary: Record<Lang, Dictionary> = {
       recording: "Grabando…",
       playback: "Escuchar",
       photo: "Adjuntar foto",
-      micError: "No se pudo acceder al micrófono. Revisa los permisos.",
+      micError: "No se pudo grabar el audio. Intenta de nuevo.",
+      micDenied: "Permiso de micrófono denegado. Revisa los permisos del navegador para este sitio.",
+      micNotFound: "No se encontró un micrófono en este dispositivo.",
+      micUnsupported: "Este navegador no soporta grabación de audio. Prueba con Chrome o Safari actualizado.",
       save: "Guardar incidente",
       saving: "Guardando…",
       saved: "Incidente guardado",
@@ -285,7 +291,10 @@ export const dictionary: Record<Lang, Dictionary> = {
       recording: "Recording…",
       playback: "Play",
       photo: "Attach photo",
-      micError: "Could not access the microphone. Check permissions.",
+      micError: "Could not record audio. Please try again.",
+      micDenied: "Microphone permission denied. Check this site's permissions in your browser settings.",
+      micNotFound: "No microphone was found on this device.",
+      micUnsupported: "This browser doesn't support audio recording. Try an updated Chrome or Safari.",
       save: "Save incident",
       saving: "Saving…",
       saved: "Incident saved",

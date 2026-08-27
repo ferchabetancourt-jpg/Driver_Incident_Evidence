@@ -4,14 +4,29 @@ const config: Config = {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        display: ["var(--font-manrope)", "system-ui", "sans-serif"],
+      },
       colors: {
-        brand: {
-          50: "#eff6ff",
-          100: "#dbeafe",
-          500: "#2563eb",
-          600: "#1d4ed8",
-          700: "#1e40af",
+        navy: {
+          DEFAULT: "#162B3A",
+          light: "#28566B",
         },
+        brand: {
+          50: "#e6f7f6",
+          100: "#c2ece9",
+          500: "#16A6A1",
+          600: "#16A6A1",
+          700: "#0E817D",
+        },
+        success: "#3BAA72",
+        warning: "#E9A23B",
+        danger: "#D95C5C",
+        surface: "#FFFFFF",
+        background: "#F7F8F6",
+        charcoal: "#172026",
+        slate: "#64727A",
       },
     },
   },

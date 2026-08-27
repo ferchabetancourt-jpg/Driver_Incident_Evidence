@@ -66,7 +66,9 @@ export function QuickIncidentForm({ blockId }: { blockId: string }) {
 
       const uploads: { type: "audio" | "photo"; file: Blob; mime: string; name: string }[] = [];
       if (audioBlob) {
-        uploads.push({ type: "audio", file: audioBlob, mime: "audio/webm", name: "incident-audio.webm" });
+        const mime = audioBlob.type || "audio/webm";
+        const extension = mime.split("/")[1]?.split(";")[0] || "webm";
+        uploads.push({ type: "audio", file: audioBlob, mime, name: `incident-audio.${extension}` });
       }
       if (photoFile) {
         uploads.push({ type: "photo", file: photoFile, mime: photoFile.type, name: photoFile.name });
