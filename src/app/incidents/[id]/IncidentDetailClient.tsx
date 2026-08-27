@@ -1,0 +1,112 @@
+"use client";
+
+import { useLanguage } from "@/lib/i18n/context";
+import { CATEGORY_LABELS } from "@/lib/i18n/dictionary";
+import type { CommunicationRecord, Incident } from "@/lib/types";
+import { addCommunication } from "../actions";
+
+interface EvidenceWithUrl {
+  id: string;
+  type: string;
+  url: string | null;
+  original_filename: string | null;
+}
+
+export function IncidentDetailClient({
+  incident,
+  evidenceWithUrls,
+  communications,
+}: {
+  incident: Incident;
+  evidenceWithUrls: EvidenceWithUrl[];
+  communications: CommunicationRecord[];
+}) {
+  const { t, lang } = useLanguage();
+
+  const tbas = (incident.incident_packages ?? []).map((ip) => ip.packages?.tba).filter(Boolean);
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-xl font-semibold">
+          {CATEGORY_LABELS[incident.category]?.[lang] ?? incident.category}
+        </h1>
+        <p className="text-sm text-gray-500">
+          {t.incident.timestamp}: {new Date(incident.occurred_at).toLocaleString(lang === "es" ? "es-ES" : "en-US")}
+        </p>
+        {incident.blocks && (
+          <p className="text-sm text-gray-500">
+            {incident.blocks.stations?.name} · {incident.blocks.block_date} · {incident.blocks.start_time}
+          </p>
+        )}
+      </div>
+
+      <div className="rounded-lg border border-gray-200 bg-white p-4">
+        <h2 className="text-sm font-medium text-gray-700">{t.incident.linkedPackages}</h2>
+        <p className="mt-1 text-sm text-gray-600">
+          {tbas.length > 0 ? tbas.join(", ") : t.incident.noLinkedPackages}
+        </p>
+      </div>
+
+      <div className="rounded-lg border border-gray-200 bg-white p-4">
+        <h2 className="text-sm font-medium text-gray-700">{t.incident.evidence}</h2>
+        {evidenceWithUrls.length === 0 && <p className="mt-1 text-sm text-gray-500">—</p>}
+        <div className="mt-2 space-y-3">
+          {evidenceWithUrls.map((item) => (
+            <div key={item.id}>
+              {item.type === "audio" && item.url && <audio controls src={item.url} className="w-full" />}
+              {item.type === "photo" && item.url && (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={item.url} alt={item.original_filename ?? "evidence"} className="max-h-64 rounded-md" />
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-lg border border-gray-200 bg-white p-4">
+        <h2 className="text-sm font-medium text-gray-700">{t.incident.communications}</h2>
+        <ul className="mt-2 space-y-2">
+          {communications.map((comm) => (
+            <li key={comm.id} className="rounded-md bg-gray-50 p-3 text-sm">
+              <p className="font-medium">{comm.type}</p>
+              {comm.summary && <p className="text-gray-600">{comm.summary}</p>}
+              {comm.reference && <p className="text-xs text-gray-400">Ref: {comm.reference}</p>}
+            </li>
+          ))}
+        </ul>
+
+        <form
+          action={async (formData) => {
+            await addCommunication(incident.id, formData);
+          }}
+          className="mt-4 space-y-2"
+        >
+          <h3 className="text-xs font-medium uppercase text-gray-500">{t.incident.addCommunication}</h3>
+          <select name="type" className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm">
+            <option value="support_call">support_call</option>
+            <option value="support_email">support_email</option>
+            <option value="driver_email">driver_email</option>
+            <option value="other">other</option>
+          </select>
+          <textarea
+            name="summary"
+            placeholder={t.incident.commSummary}
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+          />
+          <input
+            name="reference"
+            placeholder={t.incident.commReference}
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+          />
+          <button
+            type="submit"
+            className="rounded-md bg-brand-600 px-4 py-2 text-sm text-white hover:bg-brand-700"
+          >
+            {t.incident.commSave}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
