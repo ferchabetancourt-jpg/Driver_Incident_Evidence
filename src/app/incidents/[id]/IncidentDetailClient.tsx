@@ -1,7 +1,7 @@
 "use client";
 
 import { useLanguage } from "@/lib/i18n/context";
-import { CATEGORY_LABELS, COMMUNICATION_TYPE_LABELS } from "@/lib/i18n/dictionary";
+import { ACTION_TAKEN_LABELS, CATEGORY_LABELS, COMMUNICATION_TYPE_LABELS } from "@/lib/i18n/dictionary";
 import { formatStationLabel, formatTime12h, type CommunicationRecord, type Incident } from "@/lib/types";
 import { addCommunication } from "../actions";
 
@@ -48,6 +48,20 @@ export function IncidentDetailClient({
           {tbas.length > 0 ? tbas.join(", ") : t.incident.noLinkedPackages}
         </p>
       </div>
+
+      <div className="rounded-lg border border-gray-200 bg-white p-4">
+        <h2 className="text-sm font-medium text-gray-700">{t.incident.actionTakenLabel}</h2>
+        <p className="mt-1 text-sm text-gray-600">
+          {incident.action_taken ? ACTION_TAKEN_LABELS[incident.action_taken]?.[lang] ?? incident.action_taken : "—"}
+        </p>
+      </div>
+
+      {incident.transcript && (
+        <div className="rounded-lg border border-gray-200 bg-white p-4">
+          <h2 className="text-sm font-medium text-gray-700">{t.incident.narrativeLabel}</h2>
+          <p className="mt-1 whitespace-pre-wrap text-sm text-gray-600">{incident.transcript}</p>
+        </div>
+      )}
 
       <div className="rounded-lg border border-gray-200 bg-white p-4">
         <h2 className="text-sm font-medium text-gray-700">{t.incident.evidence}</h2>

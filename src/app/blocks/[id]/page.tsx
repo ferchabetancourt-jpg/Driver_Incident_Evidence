@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import type { Block, Incident } from "@/lib/types";
+import type { Block, Incident, Station } from "@/lib/types";
 import { QuickIncidentToggle } from "@/components/QuickIncidentToggle";
 import { IncidentList } from "@/components/IncidentList";
 import { BlockHeader } from "./BlockHeader";
@@ -16,15 +16,18 @@ export default async function BlockDetailPage({ params }: { params: { id: string
 
   if (!block) notFound();
 
-  const { data: incidents } = await supabase
-    .from("incidents")
-    .select("*, incident_packages(packages(*)), evidence(*)")
-    .eq("block_id", params.id)
-    .order("occurred_at", { ascending: false });
+  const [{ data: incidents }, { data: stations }] = await Promise.all([
+    supabase
+      .from("incidents")
+      .select("*, incident_packages(packages(*)), evidence(*)")
+      .eq("block_id", params.id)
+      .order("occurred_at", { ascending: false }),
+    supabase.from("stations").select("*").order("name"),
+  ]);
 
   return (
     <div className="space-y-6">
-      <BlockHeader block={block as Block} />
+      <BlockHeader block={block as Block} stations={(stations as Station[]) ?? []} />
 
       <QuickIncidentToggle blockId={params.id} />
 

@@ -4,9 +4,17 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useLanguage } from "@/lib/i18n/context";
 import { createClient } from "@/lib/supabase/client";
-import { CATEGORY_LABELS } from "@/lib/i18n/dictionary";
-import { INCIDENT_CATEGORIES, type IncidentCategory, type IncidentScope } from "@/lib/types";
+import { ACTION_TAKEN_LABELS, CATEGORY_LABELS } from "@/lib/i18n/dictionary";
+import {
+  ACTION_TAKEN_OPTIONS,
+  INCIDENT_CATEGORIES,
+  type ActionTaken,
+  type IncidentCategory,
+  type IncidentScope,
+} from "@/lib/types";
 import { AudioRecorder } from "./AudioRecorder";
+
+type NarrativeMode = "audio" | "text";
 
 export function QuickIncidentForm({
   blockId,
@@ -23,6 +31,9 @@ export function QuickIncidentForm({
   const [scope, setScope] = useState<IncidentScope>("package");
   const [tba, setTba] = useState("");
   const [category, setCategory] = useState<IncidentCategory>(INCIDENT_CATEGORIES[0]);
+  const [actionTaken, setActionTaken] = useState<ActionTaken | null>(null);
+  const [narrativeMode, setNarrativeMode] = useState<NarrativeMode>("audio");
+  const [narrativeText, setNarrativeText] = useState("");
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
@@ -30,6 +41,11 @@ export function QuickIncidentForm({
   const [savedAt, setSavedAt] = useState<number | null>(null);
 
   async function handleSave() {
+    if (!actionTaken) {
+      setError(t.incident.actionTakenRequired);
+      return;
+    }
+
     setSaving(true);
     setError(null);
     try {
@@ -41,7 +57,12 @@ export function QuickIncidentForm({
 
       const { data: incident, error: incidentError } = await supabase
         .from("incidents")
-        .insert({ block_id: blockId, category })
+        .insert({
+          block_id: blockId,
+          category,
+          action_taken: actionTaken,
+          transcript: narrativeMode === "text" && narrativeText.trim() ? narrativeText.trim() : null,
+        })
         .select("id")
         .single();
       if (incidentError) throw incidentError;
@@ -73,7 +94,7 @@ export function QuickIncidentForm({
       }
 
       const uploads: { type: "audio" | "photo"; file: Blob; mime: string; name: string }[] = [];
-      if (audioBlob) {
+      if (narrativeMode === "audio" && audioBlob) {
         const mime = audioBlob.type || "audio/webm";
         const extension = mime.split("/")[1]?.split(";")[0] || "webm";
         uploads.push({ type: "audio", file: audioBlob, mime, name: `incident-audio.${extension}` });
@@ -101,6 +122,8 @@ export function QuickIncidentForm({
 
       setSavedAt(Date.now());
       setTba("");
+      setActionTaken(null);
+      setNarrativeText("");
       setAudioBlob(null);
       setPhotoFile(null);
       router.refresh();
@@ -173,7 +196,57 @@ export function QuickIncidentForm({
         </select>
       </div>
 
-      <AudioRecorder onRecorded={setAudioBlob} />
+      <div>
+        <p className="mb-1 text-sm text-gray-600">{t.incident.actionTaken}</p>
+        <div className="flex flex-wrap gap-2">
+          {ACTION_TAKEN_OPTIONS.map((action) => (
+            <button
+              key={action}
+              type="button"
+              onClick={() => setActionTaken(action)}
+              className={`rounded-md px-3 py-2 text-sm ${
+                actionTaken === action ? "bg-brand-600 text-white" : "bg-gray-100 text-gray-700"
+              }`}
+            >
+              {ACTION_TAKEN_LABELS[action][lang]}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <div className="mb-1 flex gap-2">
+          <button
+            type="button"
+            onClick={() => setNarrativeMode("audio")}
+            className={`rounded-md px-3 py-1.5 text-sm ${
+              narrativeMode === "audio" ? "bg-navy text-white" : "bg-gray-100 text-gray-700"
+            }`}
+          >
+            {t.incident.narrativeAudio}
+          </button>
+          <button
+            type="button"
+            onClick={() => setNarrativeMode("text")}
+            className={`rounded-md px-3 py-1.5 text-sm ${
+              narrativeMode === "text" ? "bg-navy text-white" : "bg-gray-100 text-gray-700"
+            }`}
+          >
+            {t.incident.narrativeText}
+          </button>
+        </div>
+        {narrativeMode === "audio" ? (
+          <AudioRecorder onRecorded={setAudioBlob} />
+        ) : (
+          <textarea
+            value={narrativeText}
+            onChange={(e) => setNarrativeText(e.target.value)}
+            placeholder={t.incident.narrativePlaceholder}
+            rows={3}
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+          />
+        )}
+      </div>
 
       <div>
         <label className="block text-sm text-gray-600">{t.incident.photo}</label>

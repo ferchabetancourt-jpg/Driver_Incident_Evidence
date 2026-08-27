@@ -1,3 +1,6 @@
+// The CAUSE of the problem — what went wrong. Kept separate from
+// ActionTaken (what the driver did about it) and CommunicationType
+// (the detailed follow-up log), which are different questions.
 export type IncidentCategory =
   | "no_access_code"
   | "gate_locked"
@@ -9,9 +12,6 @@ export type IncidentCategory =
   | "delivery_instructions"
   | "vehicle_route_issue"
   | "weather_or_external"
-  | "support_call"
-  | "email_to_amazon"
-  | "email_from_amazon"
   | "other";
 
 export const INCIDENT_CATEGORIES: IncidentCategory[] = [
@@ -25,9 +25,19 @@ export const INCIDENT_CATEGORIES: IncidentCategory[] = [
   "delivery_instructions",
   "vehicle_route_issue",
   "weather_or_external",
-  "support_call",
-  "email_to_amazon",
-  "email_from_amazon",
+  "other",
+];
+
+// The ACTION the driver took in response to the incident — a separate
+// question from the cause. Just a tag; the "why"/detail lives in the
+// audio or text narrative, not in a sub-field here.
+export type ActionTaken = "marked_in_app" | "called_support" | "emailed_amazon" | "returned_no_action" | "other";
+
+export const ACTION_TAKEN_OPTIONS: ActionTaken[] = [
+  "marked_in_app",
+  "called_support",
+  "emailed_amazon",
+  "returned_no_action",
   "other",
 ];
 
@@ -122,6 +132,7 @@ export interface Incident {
   id: string;
   block_id: string;
   category: IncidentCategory;
+  action_taken: ActionTaken | null;
   occurred_at: string;
   transcript: string | null;
   structured_summary: string | null;

@@ -11,9 +11,14 @@ export const CATEGORY_LABELS: Record<string, { es: string; en: string }> = {
   delivery_instructions: { es: "Problema con instrucciones de entrega", en: "Delivery instructions problem" },
   vehicle_route_issue: { es: "Problema de vehículo/ruta", en: "Vehicle/route issue" },
   weather_or_external: { es: "Clima u otra condición externa", en: "Weather or other external condition" },
-  support_call: { es: "Llamada a la línea de Soporte", en: "Support line call" },
-  email_to_amazon: { es: "Email enviado a Amazon", en: "Email sent to Amazon" },
-  email_from_amazon: { es: "Email recibido de Amazon", en: "Email received from Amazon" },
+  other: { es: "Otro", en: "Other" },
+};
+
+export const ACTION_TAKEN_LABELS: Record<string, { es: string; en: string }> = {
+  marked_in_app: { es: "Marcado en la app", en: "Marked in the app" },
+  called_support: { es: "Llamé a Soporte", en: "Called Support" },
+  emailed_amazon: { es: "Envié un email a Amazon", en: "Emailed Amazon" },
+  returned_no_action: { es: "Devolví el paquete a la estación", en: "Returned the package to the station" },
   other: { es: "Otro", en: "Other" },
 };
 
@@ -81,10 +86,14 @@ export interface Dictionary {
     scopeBlock: string;
     tba: string;
     category: string;
+    actionTaken: string;
     record: string;
     stop: string;
     recording: string;
     playback: string;
+    narrativeAudio: string;
+    narrativeText: string;
+    narrativePlaceholder: string;
     photo: string;
     micError: string;
     micDenied: string;
@@ -97,6 +106,9 @@ export interface Dictionary {
     timestamp: string;
     linkedPackages: string;
     noLinkedPackages: string;
+    actionTakenLabel: string;
+    actionTakenRequired: string;
+    narrativeLabel: string;
     addCommunication: string;
     commType: string;
     commSummary: string;
@@ -196,11 +208,15 @@ export const dictionary: Record<Lang, Dictionary> = {
       scopePackage: "Un paquete / TBA específico",
       scopeBlock: "Todo el bloque",
       tba: "TBA (opcional)",
-      category: "Categoría",
+      category: "¿Qué pasó?",
+      actionTaken: "¿Qué hiciste?",
       record: "Grabar audio",
       stop: "Detener",
       recording: "Grabando…",
       playback: "Escuchar",
+      narrativeAudio: "🎙 Audio",
+      narrativeText: "✍️ Texto",
+      narrativePlaceholder: "Describe brevemente qué pasó...",
       photo: "Adjuntar foto",
       micError: "No se pudo grabar el audio. Intenta de nuevo.",
       micDenied: "Permiso de micrófono denegado. Revisa los permisos del navegador para este sitio.",
@@ -213,6 +229,9 @@ export const dictionary: Record<Lang, Dictionary> = {
       timestamp: "Fecha y hora",
       linkedPackages: "Paquetes/TBA vinculados",
       noLinkedPackages: "Sin paquete específico (incidente de bloque).",
+      actionTakenLabel: "Acción tomada",
+      actionTakenRequired: "Selecciona qué hiciste antes de guardar.",
+      narrativeLabel: "Descripción",
       addCommunication: "Registrar comunicación con Soporte",
       commType: "Tipo",
       commSummary: "¿Qué te dijeron / qué pasó?",
@@ -303,11 +322,15 @@ export const dictionary: Record<Lang, Dictionary> = {
       scopePackage: "A specific package / TBA",
       scopeBlock: "The whole block",
       tba: "TBA (optional)",
-      category: "Category",
+      category: "What happened?",
+      actionTaken: "What did you do?",
       record: "Record audio",
       stop: "Stop",
       recording: "Recording…",
       playback: "Play",
+      narrativeAudio: "🎙 Audio",
+      narrativeText: "✍️ Text",
+      narrativePlaceholder: "Briefly describe what happened...",
       photo: "Attach photo",
       micError: "Could not record audio. Please try again.",
       micDenied: "Microphone permission denied. Check this site's permissions in your browser settings.",
@@ -320,6 +343,9 @@ export const dictionary: Record<Lang, Dictionary> = {
       timestamp: "Date & time",
       linkedPackages: "Linked packages/TBA",
       noLinkedPackages: "No specific package (block-level incident).",
+      actionTakenLabel: "Action taken",
+      actionTakenRequired: "Choose what you did before saving.",
+      narrativeLabel: "Description",
       addCommunication: "Log a Support communication",
       commType: "Type",
       commSummary: "What did they tell you / what happened?",
