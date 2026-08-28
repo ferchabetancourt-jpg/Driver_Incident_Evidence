@@ -3,7 +3,7 @@
 import { useLanguage } from "@/lib/i18n/context";
 import { ACTION_TAKEN_LABELS, CATEGORY_LABELS, COMMUNICATION_TYPE_LABELS } from "@/lib/i18n/dictionary";
 import { formatStationLabel, formatTime12h, type CommunicationRecord, type Incident } from "@/lib/types";
-import { addCommunication } from "../actions";
+import { AddCommunicationForm } from "./AddCommunicationForm";
 
 interface EvidenceWithUrl {
   id: string;
@@ -91,37 +91,7 @@ export function IncidentDetailClient({
           ))}
         </ul>
 
-        <form
-          action={async (formData) => {
-            await addCommunication(incident.id, formData);
-          }}
-          className="mt-4 space-y-2"
-        >
-          <h3 className="text-xs font-medium uppercase text-gray-500">{t.incident.addCommunication}</h3>
-          <select name="type" className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm">
-            {Object.entries(COMMUNICATION_TYPE_LABELS).map(([value, labels]) => (
-              <option key={value} value={value}>
-                {labels[lang]}
-              </option>
-            ))}
-          </select>
-          <textarea
-            name="summary"
-            placeholder={t.incident.commSummary}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-          />
-          <input
-            name="reference"
-            placeholder={t.incident.commReference}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-          />
-          <button
-            type="submit"
-            className="rounded-md bg-brand-600 px-4 py-2 text-sm text-white hover:bg-brand-700"
-          >
-            {t.incident.commSave}
-          </button>
-        </form>
+        <AddCommunicationForm incidentId={incident.id} blockId={incident.block_id} />
       </div>
     </div>
   );
