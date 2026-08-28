@@ -38,7 +38,6 @@ export function QuickIncidentForm({
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [commSummary, setCommSummary] = useState("");
   const [commReference, setCommReference] = useState("");
-  const [commAudioBlob, setCommAudioBlob] = useState<Blob | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [savedAt, setSavedAt] = useState<number | null>(null);
@@ -98,7 +97,7 @@ export function QuickIncidentForm({
         if (linkError) throw linkError;
       }
 
-      if (needsComm && (commSummary.trim() || commReference.trim() || commAudioBlob)) {
+      if (needsComm && (commSummary.trim() || commReference.trim())) {
         const { error: commError } = await supabase.from("communications").insert({
           incident_id: incident.id,
           type: actionTaken === "called_support" ? "support_call" : "driver_email",
@@ -113,11 +112,6 @@ export function QuickIncidentForm({
         const mime = audioBlob.type || "audio/webm";
         const extension = mime.split("/")[1]?.split(";")[0] || "webm";
         uploads.push({ type: "audio", file: audioBlob, mime, name: `incident-audio.${extension}` });
-      }
-      if (needsComm && commAudioBlob) {
-        const mime = commAudioBlob.type || "audio/webm";
-        const extension = mime.split("/")[1]?.split(";")[0] || "webm";
-        uploads.push({ type: "audio", file: commAudioBlob, mime, name: `communication-audio.${extension}` });
       }
       if (photoFile) {
         uploads.push({ type: "photo", file: photoFile, mime: photoFile.type, name: photoFile.name });
@@ -148,7 +142,6 @@ export function QuickIncidentForm({
       setPhotoFile(null);
       setCommSummary("");
       setCommReference("");
-      setCommAudioBlob(null);
       router.refresh();
       onSaved?.();
     } catch (err) {
@@ -247,7 +240,6 @@ export function QuickIncidentForm({
             rows={2}
             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
           />
-          <AudioRecorder onRecorded={setCommAudioBlob} />
           <input
             value={commReference}
             onChange={(e) => setCommReference(e.target.value)}
