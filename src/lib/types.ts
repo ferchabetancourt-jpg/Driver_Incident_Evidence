@@ -102,21 +102,21 @@ export function formatTime12h(time: string | null | undefined) {
 }
 
 // A block is "in progress" if the current local time falls within its
-// start/end time on its date. If end_time isn't set yet (the driver
-// hasn't closed out the block), it stays active only through the end
-// of its own calendar date — once that date has passed we stop
-// guessing, rather than inventing an arbitrary duration.
+// start/end time on its date. Amazon Flex blocks max out around 5
+// hours, so if end_time isn't set yet (the driver hasn't closed out
+// the block), use that as the fallback window instead of guessing
+// the block runs all day.
+const DEFAULT_BLOCK_DURATION_HOURS = 5;
+
 export function isBlockActiveNow(block: Pick<Block, "block_date" | "start_time" | "end_time">, now = new Date()) {
   const start = new Date(`${block.block_date}T${block.start_time}`);
   if (Number.isNaN(start.getTime()) || now < start) return false;
 
-  if (block.end_time) {
-    const end = new Date(`${block.block_date}T${block.end_time}`);
-    return now <= end;
-  }
+  const end = block.end_time
+    ? new Date(`${block.block_date}T${block.end_time}`)
+    : new Date(start.getTime() + DEFAULT_BLOCK_DURATION_HOURS * 60 * 60 * 1000);
 
-  const endOfDay = new Date(`${block.block_date}T23:59:59`);
-  return now <= endOfDay;
+  return now <= end;
 }
 
 export interface PackageRecord {
