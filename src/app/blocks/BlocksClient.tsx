@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/context";
-import { formatPayAmount, formatStationLabel, formatTime12h, type Block, type Station } from "@/lib/types";
+import { formatPayAmount, formatStationLabel, formatTime12h, isBlockOpen, type Block, type Station } from "@/lib/types";
 import { DeleteBlockButton } from "@/components/DeleteBlockButton";
 import { createBlock, deleteBlock } from "./actions";
 
@@ -96,6 +96,13 @@ export function BlocksClient({ blocks, stations }: { blocks: Block[]; stations: 
                 )}
               </p>
               <p className="text-sm text-gray-500">{formatStationLabel(block.stations)}</p>
+              <span
+                className={`inline-block rounded-full px-2 py-0.5 text-xs ${
+                  isBlockOpen(block) ? "bg-brand-50 text-brand-700" : "bg-gray-100 text-slate"
+                }`}
+              >
+                {isBlockOpen(block) ? t.blocks.open : t.blocks.closed}
+              </span>
             </div>
             <div className="flex items-center gap-1">
               <Link href={`/blocks/${block.id}`} className="text-sm text-brand-600 hover:underline">

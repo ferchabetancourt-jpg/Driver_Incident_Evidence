@@ -78,6 +78,11 @@ export interface Dictionary {
     viewDetail: string;
     deleteConfirm: string;
     delete: string;
+    finish: string;
+    finishConfirm: string;
+    closedAt: string;
+    open: string;
+    closed: string;
   };
   incident: {
     quickCapture: string;
@@ -201,6 +206,11 @@ export const dictionary: Record<Lang, Dictionary> = {
       viewDetail: "Ver detalle",
       deleteConfirm: "¿Borrar este bloque? Se eliminarán también sus incidentes y evidencia. Esta acción no se puede deshacer.",
       delete: "Borrar bloque",
+      finish: "Finalizar bloque",
+      finishConfirm: "¿Marcar este bloque como finalizado? La hora que Amazon programó no cambia, solo se registra la hora real en que terminaste.",
+      closedAt: "Cerrado",
+      open: "Activo",
+      closed: "Cerrado",
     },
     incident: {
       quickCapture: "Incidente rápido",
@@ -315,6 +325,11 @@ export const dictionary: Record<Lang, Dictionary> = {
       viewDetail: "View detail",
       deleteConfirm: "Delete this block? Its incidents and evidence will be deleted too. This cannot be undone.",
       delete: "Delete block",
+      finish: "Finish block",
+      finishConfirm: "Mark this block as finished? Amazon's scheduled time doesn't change — this only records the actual time you finished.",
+      closedAt: "Closed",
+      open: "Active",
+      closed: "Closed",
     },
     incident: {
       quickCapture: "Quick incident",

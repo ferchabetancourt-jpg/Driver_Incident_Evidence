@@ -3,13 +3,22 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/context";
-import { formatPayAmount, formatStationLabel, formatTime12h, type Block, type Station } from "@/lib/types";
+import {
+  formatPayAmount,
+  formatStationLabel,
+  formatTime12h,
+  isBlockOpen,
+  type Block,
+  type Station,
+} from "@/lib/types";
 import { DeleteBlockButton } from "@/components/DeleteBlockButton";
-import { deleteBlock, updateBlock } from "../actions";
+import { FinishBlockButton } from "@/components/FinishBlockButton";
+import { closeBlock, deleteBlock, updateBlock } from "../actions";
 
 export function BlockHeader({ block, stations }: { block: Block; stations: Station[] }) {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [editing, setEditing] = useState(false);
+  const open = isBlockOpen(block);
 
   if (editing) {
     return (
@@ -90,30 +99,39 @@ export function BlockHeader({ block, stations }: { block: Block; stations: Stati
   }
 
   return (
-    <div className="flex items-start justify-between">
-      <div>
-        <Link href="/blocks" className="text-sm text-brand-600 hover:underline">
-          ← {formatStationLabel(block.stations)}
-        </Link>
-        <h1 className="text-xl font-semibold">
-          {block.block_date} · {formatTime12h(block.start_time)}
-          {formatPayAmount(block.pay_amount) && (
-            <span className="ml-2 text-success">{formatPayAmount(block.pay_amount)}</span>
-          )}
-        </h1>
+    <div className="space-y-3">
+      <div className="flex items-start justify-between">
+        <div>
+          <Link href="/blocks" className="text-sm text-brand-600 hover:underline">
+            ← {formatStationLabel(block.stations)}
+          </Link>
+          <h1 className="text-xl font-semibold">
+            {block.block_date} · {formatTime12h(block.start_time)}
+            {block.end_time && <> – {formatTime12h(block.end_time)}</>}
+            {formatPayAmount(block.pay_amount) && (
+              <span className="ml-2 text-success">{formatPayAmount(block.pay_amount)}</span>
+            )}
+          </h1>
+          <p className="text-sm text-slate">
+            {open ? t.blocks.open : t.blocks.closed}
+            {!open && block.closed_at && (
+              <> · {t.blocks.closedAt} {new Date(block.closed_at).toLocaleString(lang === "es" ? "es-ES" : "en-US")}</>
+            )}
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            aria-label={t.common.edit}
+            onClick={() => setEditing(true)}
+            className="flex h-11 w-11 items-center justify-center rounded-full text-2xl text-slate hover:bg-gray-100"
+          >
+            ✎
+          </button>
+          <DeleteBlockButton onDelete={() => deleteBlock(block.id, "/blocks")} />
+        </div>
       </div>
-      <div className="flex items-center gap-1">
-        <button
-          type="button"
-          aria-label={t.common.edit}
-          title={t.common.edit}
-          onClick={() => setEditing(true)}
-          className="flex h-8 w-8 items-center justify-center rounded-full text-slate hover:bg-gray-100"
-        >
-          ✎
-        </button>
-        <DeleteBlockButton onDelete={() => deleteBlock(block.id, "/blocks")} />
-      </div>
+      {open && <FinishBlockButton onFinish={() => closeBlock(block.id)} />}
     </div>
   );
 }

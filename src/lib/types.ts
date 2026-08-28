@@ -79,6 +79,7 @@ export interface Block {
   end_time: string | null;
   duration_minutes: number | null;
   pay_amount: number | null;
+  closed_at: string | null;
   source: "manual" | "screenshot";
   created_at: string;
   stations?: Station;
@@ -101,22 +102,12 @@ export function formatTime12h(time: string | null | undefined) {
   return `${hour12}:${mStr} ${period}`;
 }
 
-// A block is "in progress" if the current local time falls within its
-// start/end time on its date. Amazon Flex blocks max out around 5
-// hours, so if end_time isn't set yet (the driver hasn't closed out
-// the block), use that as the fallback window instead of guessing
-// the block runs all day.
-const DEFAULT_BLOCK_DURATION_HOURS = 5;
-
-export function isBlockActiveNow(block: Pick<Block, "block_date" | "start_time" | "end_time">, now = new Date()) {
-  const start = new Date(`${block.block_date}T${block.start_time}`);
-  if (Number.isNaN(start.getTime()) || now < start) return false;
-
-  const end = block.end_time
-    ? new Date(`${block.block_date}T${block.end_time}`)
-    : new Date(start.getTime() + DEFAULT_BLOCK_DURATION_HOURS * 60 * 60 * 1000);
-
-  return now <= end;
+// A block is "open" (active) simply when the driver hasn't tapped
+// "Finalizar bloque" yet. No time-of-day math: start_time/end_time are
+// Amazon's scheduled window (kept as-is for disputes), not a signal
+// the app should use to guess whether the driver is still working.
+export function isBlockOpen(block: Pick<Block, "closed_at">) {
+  return !block.closed_at;
 }
 
 export interface PackageRecord {

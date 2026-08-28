@@ -75,6 +75,21 @@ export async function updateBlock(blockId: string, formData: FormData) {
   revalidatePath(`/blocks/${blockId}`);
 }
 
+export async function closeBlock(blockId: string) {
+  const supabase = createClient();
+
+  const { error } = await supabase
+    .from("blocks")
+    .update({ closed_at: new Date().toISOString() })
+    .eq("id", blockId);
+
+  if (error) throw error;
+
+  revalidatePath("/blocks");
+  revalidatePath("/dashboard");
+  revalidatePath(`/blocks/${blockId}`);
+}
+
 export async function deleteBlock(blockId: string, redirectPath?: string) {
   const supabase = createClient();
 
