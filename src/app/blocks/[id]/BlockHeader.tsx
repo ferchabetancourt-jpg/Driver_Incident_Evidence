@@ -12,9 +12,8 @@ import {
   type Block,
   type Station,
 } from "@/lib/types";
-import { DeleteBlockButton } from "@/components/DeleteBlockButton";
 import { FinishBlockButton } from "@/components/FinishBlockButton";
-import { closeBlock, deleteBlock, updateBlock } from "../actions";
+import { closeBlock, updateBlock } from "../actions";
 
 export function BlockHeader({ block, stations }: { block: Block; stations: Station[] }) {
   const { t, lang } = useLanguage();
@@ -120,17 +119,14 @@ export function BlockHeader({ block, stations }: { block: Block; stations: Stati
             )}
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            aria-label={t.common.edit}
-            onClick={() => setEditing(true)}
-            className="flex h-11 w-11 items-center justify-center rounded-full text-2xl text-slate hover:bg-gray-100"
-          >
-            ✎
-          </button>
-          <DeleteBlockButton onDelete={() => deleteBlock(block.id, "/blocks")} />
-        </div>
+        <button
+          type="button"
+          aria-label={t.common.edit}
+          onClick={() => setEditing(true)}
+          className="flex h-11 w-11 items-center justify-center rounded-full text-2xl text-slate hover:bg-gray-100"
+        >
+          ✎
+        </button>
       </div>
       {open && <FinishBlockButton onFinish={() => closeBlock(block.id)} />}
     </div>
