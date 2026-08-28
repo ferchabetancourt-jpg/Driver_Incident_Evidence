@@ -14,7 +14,7 @@ export default async function DashboardPage() {
 
   const { data: recentIncidents } = await supabase
     .from("incidents")
-    .select("*, incident_packages(packages(*)), evidence(*)")
+    .select("*, blocks(*, stations(*)), incident_packages(packages(*)), evidence(*)")
     .order("occurred_at", { ascending: false })
     .limit(10);
 

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/context";
 import { CATEGORY_LABELS } from "@/lib/i18n/dictionary";
-import { formatDateTime12h, type Incident } from "@/lib/types";
+import { formatDateTime12h, formatStationLabel, formatTime12h, type Incident } from "@/lib/types";
 
 export function IncidentList({ incidents }: { incidents: Incident[] }) {
   const { t, lang } = useLanguage();
@@ -33,6 +33,12 @@ export function IncidentList({ incidents }: { incidents: Incident[] }) {
               <p className="mt-1 text-sm text-gray-500">
                 {tbas.length > 0 ? tbas.join(", ") : t.incident.noLinkedPackages}
               </p>
+              {incident.blocks && (
+                <p className="mt-1 text-xs text-gray-400">
+                  {formatStationLabel(incident.blocks.stations)} · {incident.blocks.block_date} ·{" "}
+                  {formatTime12h(incident.blocks.start_time)}
+                </p>
+              )}
               <div className="mt-1 flex gap-2 text-xs text-gray-400">
                 {hasAudio && <span>🎙</span>}
                 {hasPhoto && <span>📷</span>}

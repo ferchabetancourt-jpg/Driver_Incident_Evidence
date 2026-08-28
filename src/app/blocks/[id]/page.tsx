@@ -19,7 +19,7 @@ export default async function BlockDetailPage({ params }: { params: { id: string
   const [{ data: incidents }, { data: stations }] = await Promise.all([
     supabase
       .from("incidents")
-      .select("*, incident_packages(packages(*)), evidence(*)")
+      .select("*, blocks(*, stations(*)), incident_packages(packages(*)), evidence(*)")
       .eq("block_id", params.id)
       .order("occurred_at", { ascending: false }),
     supabase.from("stations").select("*").order("name"),
