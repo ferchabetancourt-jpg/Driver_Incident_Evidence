@@ -36,9 +36,14 @@ export function QuickIncidentForm({
   const [narrativeText, setNarrativeText] = useState("");
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
+  const [commSummary, setCommSummary] = useState("");
+  const [commReference, setCommReference] = useState("");
+  const [commAudioBlob, setCommAudioBlob] = useState<Blob | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [savedAt, setSavedAt] = useState<number | null>(null);
+
+  const needsComm = actionTaken === "called_support" || actionTaken === "emailed_amazon";
 
   async function handleSave() {
     if (!actionTaken) {
@@ -93,11 +98,26 @@ export function QuickIncidentForm({
         if (linkError) throw linkError;
       }
 
+      if (needsComm && (commSummary.trim() || commReference.trim() || commAudioBlob)) {
+        const { error: commError } = await supabase.from("communications").insert({
+          incident_id: incident.id,
+          type: actionTaken === "called_support" ? "support_call" : "driver_email",
+          summary: commSummary.trim() || null,
+          reference: commReference.trim() || null,
+        });
+        if (commError) throw commError;
+      }
+
       const uploads: { type: "audio" | "photo"; file: Blob; mime: string; name: string }[] = [];
       if (narrativeMode === "audio" && audioBlob) {
         const mime = audioBlob.type || "audio/webm";
         const extension = mime.split("/")[1]?.split(";")[0] || "webm";
         uploads.push({ type: "audio", file: audioBlob, mime, name: `incident-audio.${extension}` });
+      }
+      if (needsComm && commAudioBlob) {
+        const mime = commAudioBlob.type || "audio/webm";
+        const extension = mime.split("/")[1]?.split(";")[0] || "webm";
+        uploads.push({ type: "audio", file: commAudioBlob, mime, name: `communication-audio.${extension}` });
       }
       if (photoFile) {
         uploads.push({ type: "photo", file: photoFile, mime: photoFile.type, name: photoFile.name });
@@ -126,6 +146,9 @@ export function QuickIncidentForm({
       setNarrativeText("");
       setAudioBlob(null);
       setPhotoFile(null);
+      setCommSummary("");
+      setCommReference("");
+      setCommAudioBlob(null);
       router.refresh();
       onSaved?.();
     } catch (err) {
@@ -213,6 +236,26 @@ export function QuickIncidentForm({
           ))}
         </div>
       </div>
+
+      {needsComm && (
+        <div className="space-y-2 rounded-md bg-brand-50 p-3">
+          <p className="text-xs font-medium uppercase text-slate">{t.incident.addCommunication}</p>
+          <textarea
+            value={commSummary}
+            onChange={(e) => setCommSummary(e.target.value)}
+            placeholder={t.incident.commSummary}
+            rows={2}
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+          />
+          <AudioRecorder onRecorded={setCommAudioBlob} />
+          <input
+            value={commReference}
+            onChange={(e) => setCommReference(e.target.value)}
+            placeholder={t.incident.commReference}
+            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+          />
+        </div>
+      )}
 
       <div>
         <div className="mb-1 flex gap-2">
