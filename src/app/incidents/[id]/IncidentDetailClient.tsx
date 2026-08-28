@@ -2,7 +2,7 @@
 
 import { useLanguage } from "@/lib/i18n/context";
 import { ACTION_TAKEN_LABELS, CATEGORY_LABELS, COMMUNICATION_TYPE_LABELS } from "@/lib/i18n/dictionary";
-import { formatStationLabel, formatTime12h, type CommunicationRecord, type Incident } from "@/lib/types";
+import { formatDateTime12h, formatStationLabel, formatTime12h, type CommunicationRecord, type Incident } from "@/lib/types";
 import { AddCommunicationForm } from "./AddCommunicationForm";
 
 interface EvidenceWithUrl {
@@ -32,7 +32,7 @@ export function IncidentDetailClient({
           {CATEGORY_LABELS[incident.category]?.[lang] ?? incident.category}
         </h1>
         <p className="text-sm text-gray-500">
-          {t.incident.timestamp}: {new Date(incident.occurred_at).toLocaleString(lang === "es" ? "es-ES" : "en-US")}
+          {t.incident.timestamp}: {formatDateTime12h(incident.occurred_at, lang)}
         </p>
         {incident.blocks && (
           <p className="text-sm text-gray-500">

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/context";
 import { CATEGORY_LABELS } from "@/lib/i18n/dictionary";
-import type { Incident } from "@/lib/types";
+import { formatDateTime12h, type Incident } from "@/lib/types";
 
 export function IncidentList({ incidents }: { incidents: Incident[] }) {
   const { t, lang } = useLanguage();
@@ -27,7 +27,7 @@ export function IncidentList({ incidents }: { incidents: Incident[] }) {
               <div className="flex items-center justify-between">
                 <p className="font-medium">{CATEGORY_LABELS[incident.category]?.[lang] ?? incident.category}</p>
                 <span className="text-xs text-gray-500">
-                  {new Date(incident.occurred_at).toLocaleString(lang === "es" ? "es-ES" : "en-US")}
+                  {formatDateTime12h(incident.occurred_at, lang)}
                 </span>
               </div>
               <p className="mt-1 text-sm text-gray-500">

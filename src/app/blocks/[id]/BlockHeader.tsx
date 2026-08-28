@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/lib/i18n/context";
 import {
+  formatDateTime12h,
   formatPayAmount,
   formatStationLabel,
   formatTime12h,
@@ -115,7 +116,7 @@ export function BlockHeader({ block, stations }: { block: Block; stations: Stati
           <p className="text-sm text-slate">
             {open ? t.blocks.open : t.blocks.closed}
             {!open && block.closed_at && (
-              <> · {t.blocks.closedAt} {new Date(block.closed_at).toLocaleString(lang === "es" ? "es-ES" : "en-US")}</>
+              <> · {t.blocks.closedAt} {formatDateTime12h(block.closed_at, lang)}</>
             )}
           </p>
         </div>

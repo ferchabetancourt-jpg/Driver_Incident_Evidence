@@ -102,6 +102,20 @@ export function formatTime12h(time: string | null | undefined) {
   return `${hour12}:${mStr} ${period}`;
 }
 
+// Formats an ISO timestamp as "date, h:mm AM/PM" — locale-aware date,
+// always 12-hour time (no seconds).
+export function formatDateTime12h(iso: string | null | undefined, lang: "es" | "en") {
+  if (!iso) return "";
+  const date = new Date(iso);
+  const datePart = date.toLocaleDateString(lang === "es" ? "es-ES" : "en-US");
+  const timePart = date.toLocaleTimeString(lang === "es" ? "es-ES" : "en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+  return `${datePart}, ${timePart}`;
+}
+
 // A block is "open" (active) simply when the driver hasn't tapped
 // "Finalizar bloque" yet. No time-of-day math: start_time/end_time are
 // Amazon's scheduled window (kept as-is for disputes), not a signal
