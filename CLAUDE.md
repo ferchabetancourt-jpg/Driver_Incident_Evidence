@@ -30,11 +30,11 @@ Deploy: Vercel, despliegue automático a producción con cada push a `main`
 
 **Esta sección es escalable según el proyecto.** Para una app personal simple, sin marca ni identidad visual propia, sin gente externa involucrada (ej. una herramienta de uso personal): puedes saltarte esta sección salvo que Fercha pida explícitamente crear estos documentos. Para un proyecto con marca, contenido, o más de una persona involucrada (ej. un producto que se vende o se comparte con un equipo): sí aplica completa.
 
-Este proyecto sí aplica la sección completa (tiene marca, identidad visual propia, y se distribuirá a otros drivers). Los 3 documentos, con sus nombres reales en este repo (no siguen el patrón `<DOC>_<NOMBRE_APP>.md` al pie de la letra porque el spec y la identidad visual llegaron como `.docx` antes de definir esta metodología):
+Este proyecto sí aplica la sección completa (tiene marca, identidad visual propia, y se distribuirá a otros drivers). Los 3 documentos, con sus nombres reales en este repo:
 
-1. **`Driver_Incident_Evidence_App_Master_Spec_v1.0.docx`** — qué hace la app, cómo funciona, la lógica core, el flujo de usuario. Es la referencia técnica/funcional.
+1. **`Driver_Incident_Evidence_App_Master_Spec_v1.0.docx`** — qué hace la app, cómo funciona, la lógica core, el flujo de usuario. Es la referencia técnica/funcional. (Sigue en `.docx`, no se ha convertido a `.md` todavía.)
 
-2. **`VISUAL IDENTITY.docx`** — paleta de colores, tipografía, tono de voz, reglas de marca. Ningún color, fuente o patrón visual nuevo se agrega sin anotarlo aquí primero. Antes de aplicar cualquier estilo nuevo, consúltalo — no asumas un default genérico ("moderno", "minimalista", etc.) sin verificar qué pide este proyecto en particular.
+2. **`IDENTIDAD_VISUAL_DRIVER_INCIDENT_EVIDENCE.md`** — paleta de colores, tipografía, tono de voz, reglas de marca (convertido desde `VISUAL IDENTITY.docx` el 29 agosto 2026, con nota de implementación al final documentando el ajuste de contraste/tamaño de letra). Ningún color, fuente o patrón visual nuevo se agrega sin anotarlo aquí primero. Antes de aplicar cualquier estilo nuevo, consúltalo — no asumas un default genérico ("moderno", "minimalista", etc.) sin verificar qué pide este proyecto en particular.
 
 3. **`PENDIENTES_DRIVER_INCIDENT_EVIDENCE.md`** — fuente de verdad de qué está hecho y qué falta, viva a lo largo de todo el proyecto (no solo de una sesión). Debe llevar fecha de "Última actualización" (y "Meta de entrega" si existe) visible arriba. Hoy está organizado por brecha de spec (pendiente/parcial/hecho) más una lista de lo ya resuelto; falta reorganizarlo por **dueño y tipo** como sugiere esta plantilla — por ejemplo:
    - Pendientes que dependen de otra persona (cliente, socio, proveedor), por nombre
