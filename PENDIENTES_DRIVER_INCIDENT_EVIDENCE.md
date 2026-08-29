@@ -58,6 +58,20 @@ email/contraseña (Supabase Auth) por rapidez de build. Confirmar con
 Fercha si el PIN sigue siendo un requisito o si email/contraseña se
 queda como decisión final.
 
+## 8. Modo oscuro (no está en el spec original)
+⬜ Pendiente
+
+Fercha trabaja bloques que a veces empiezan a las 3am y terminan de día,
+o empiezan 4pm y terminan de noche — la misma app se usa en luz solar
+fuerte y en oscuridad total dentro del mismo bloque. El ajuste de
+contraste del 29 agosto (fondo/texto más oscuros) resuelve el problema
+de sol, pero una pantalla clara sigue siendo incómoda de noche.
+
+Propuesta: en vez de un botón de modo oscuro dentro de la app, que la
+app respete el modo claro/oscuro del celular (vía `prefers-color-scheme`
+en CSS). Requiere definir una paleta oscura completa (fondo, navy, teal,
+etc.) — pendiente de decidir colores con Fercha antes de programar.
+
 ---
 
 ## Ya resuelto (Fase 0 + ronda de pruebas en vivo)
