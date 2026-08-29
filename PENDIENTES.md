@@ -75,3 +75,6 @@ queda como decisión final.
 - Aislamiento de datos por usuario (RLS) ✅
 - Formato de hora 12h en toda la app, incidentes agrupados por bloque
   (fecha · hora · estación) en Inicio/Bloque/Buscar ✅
+- Identidad visual: mayor tamaño de letra y contraste en toda la app,
+  para lectura rápida con sol/manejando (detectado en bloque de prueba
+  del 29 agosto 2026) ✅
