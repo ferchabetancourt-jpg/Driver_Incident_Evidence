@@ -1,9 +1,9 @@
-# CLAUDE.md — [NOMBRE DEL PROYECTO]
+# CLAUDE.md — Driver Incident Evidence
 
 Instrucciones de trabajo para cualquier sesión de Claude en este repo. Léelo completo antes de tocar código.
 
-Repo: [owner/repo] — Stack: [ej. HTML/CSS/JS estático | Lovable + Supabase | Next.js | etc.]
-Deploy: [ej. Vercel | Lovable | otro]
+Repo: ferchabetancourt-jpg/Driver_Incident_Evidence — Stack: Next.js 14 (App Router) + TypeScript + Tailwind CSS + Supabase (Postgres, Auth, Storage, RLS)
+Deploy: Vercel, despliegue automático a producción con cada push a `main`
 
 ---
 
@@ -19,7 +19,7 @@ Deploy: [ej. Vercel | Lovable | otro]
 8. Explica en español simple, sin jerga técnica, qué cambió y por qué — Fercha no es programadora.
 9. Sé honesta si algo falla o no tienes acceso/control sobre una herramienta externa — nunca inventes que "ya quedó" sin confirmarlo. Da pasos claros para resolverlo del otro lado si hace falta.
 10. Con PRs de GitHub: abre el PR, da el link del preview para probar, y espera confirmación antes de mergear a producción — nunca mergees sin que se pida explícitamente. Al mergear, no borres la rama salvo que se pida.
-11. Mantén viva la lista de pendientes a lo largo del proyecto (en PENDIENTES_<APP>.md, ver sección B) — cosas identificadas pero pospuestas, deuda técnica, ideas que surgieron pero no eran prioridad. Sácalas a relucir cuando tenga sentido retomarlas, no dejes que se pierdan en el chat.
+11. Mantén viva la lista de pendientes a lo largo del proyecto (en `PENDIENTES_DRIVER_INCIDENT_EVIDENCE.md`, ver sección B) — cosas identificadas pero pospuestas, deuda técnica, ideas que surgieron pero no eran prioridad. Sácalas a relucir cuando tenga sentido retomarlas, no dejes que se pierdan en el chat.
 12. Sugiere optimizaciones de forma proactiva cuando veas algo que puede ayudar (patrón repetido, fricción de UX, riesgo a futuro) aunque no se haya pedido — coméntalo breve, no lo implementes sin que se pida.
 13. El contenido final (copy, textos de marca, mensajes a usuarios/clientes) siempre lo aprueba Fercha. Puedes proponer y redactar borradores, pero no lo des por publicado sin su visto bueno explícito.
 14. Nunca commitees `.env`, API keys ni credenciales. Si algo las necesita, avisa y pide que se agreguen directo en el hosting/donde corresponda — nunca las pidas por chat ni las escribas en el código.
@@ -30,13 +30,13 @@ Deploy: [ej. Vercel | Lovable | otro]
 
 **Esta sección es escalable según el proyecto.** Para una app personal simple, sin marca ni identidad visual propia, sin gente externa involucrada (ej. una herramienta de uso personal): puedes saltarte esta sección salvo que Fercha pida explícitamente crear estos documentos. Para un proyecto con marca, contenido, o más de una persona involucrada (ej. un producto que se vende o se comparte con un equipo): sí aplica completa.
 
-Cuando aplique, todo repo debe tener estos 3 archivos en la raíz (nombrados `<DOC>_<NOMBRE_APP>.md`). Léelos siempre al empezar una sesión nueva. Si alguno no existe todavía, dilo — no asumas que no hace falta, y no lo crees sin que te lo pida.
+Este proyecto sí aplica la sección completa (tiene marca, identidad visual propia, y se distribuirá a otros drivers). Los 3 documentos, con sus nombres reales en este repo (no siguen el patrón `<DOC>_<NOMBRE_APP>.md` al pie de la letra porque el spec y la identidad visual llegaron como `.docx` antes de definir esta metodología):
 
-1. **SPEC_<APP>.md** (o FLUJO_<APP>.md) — qué hace la app, cómo funciona, la lógica core, el flujo de usuario. Es la referencia técnica/funcional.
+1. **`Driver_Incident_Evidence_App_Master_Spec_v1.0.docx`** — qué hace la app, cómo funciona, la lógica core, el flujo de usuario. Es la referencia técnica/funcional.
 
-2. **IDENTIDAD_VISUAL_<APP>.md** — paleta de colores, tipografía, tono de voz, reglas de marca. Ningún color, fuente o patrón visual nuevo se agrega sin anotarlo aquí primero. Antes de aplicar cualquier estilo nuevo, consúltalo — no asumas un default genérico ("moderno", "minimalista", etc.) sin verificar qué pide este proyecto en particular.
+2. **`VISUAL IDENTITY.docx`** — paleta de colores, tipografía, tono de voz, reglas de marca. Ningún color, fuente o patrón visual nuevo se agrega sin anotarlo aquí primero. Antes de aplicar cualquier estilo nuevo, consúltalo — no asumas un default genérico ("moderno", "minimalista", etc.) sin verificar qué pide este proyecto en particular.
 
-3. **PENDIENTES_<APP>.md** — fuente de verdad de qué está hecho y qué falta, viva a lo largo de todo el proyecto (no solo de una sesión). Debe llevar fecha de "Última actualización" (y "Meta de entrega" si existe) visible arriba. Organízalo por **dueño y tipo**, no solo por bloque/feature — por ejemplo:
+3. **`PENDIENTES_DRIVER_INCIDENT_EVIDENCE.md`** — fuente de verdad de qué está hecho y qué falta, viva a lo largo de todo el proyecto (no solo de una sesión). Debe llevar fecha de "Última actualización" (y "Meta de entrega" si existe) visible arriba. Hoy está organizado por brecha de spec (pendiente/parcial/hecho) más una lista de lo ya resuelto; falta reorganizarlo por **dueño y tipo** como sugiere esta plantilla — por ejemplo:
    - Pendientes que dependen de otra persona (cliente, socio, proveedor), por nombre
    - Pendientes que dependen de Fercha
    - Bloques de trabajo técnico, numerados
@@ -61,10 +61,15 @@ Cuando aplique, todo repo debe tener estos 3 archivos en la raíz (nombrados `<D
 
 ## D) Ramas y PRs
 
-- Trabaja siempre en una rama `claude/<descripción-corta>`, nunca directo en `main`.
-- Default: una rama nueva por bloque/tarea (más fácil de rastrear qué PR trajo qué). Para un feature grande que necesita muchas rondas de ajuste seguidas, reutilizar una sola rama a través de varios PRs chicos es válido — pero confírmalo con Fercha antes de adoptar ese patrón en vez del default.
-- [Completar según el hosting: cómo se genera el link de preview — ej. "Vercel: hay que abrir PR para que el bot comente la URL" / "Lovable: el preview vive en la URL del proyecto directamente" / etc.]
-- Cuando Fercha dé "Aprobado / GO" final sobre un bloque: mergear el PR sin borrar la rama (salvo que pida lo contrario), y marcar el bloque como completado en PENDIENTES_<APP>.md.
+**Excepción confirmada con Fercha para este proyecto:** en vez de PRs con preview, el flujo es push directo a `main`, así:
+
+1. Trabaja en la rama `claude/project-diagnosis-q6ch5d` (rama única reutilizada para este proyecto, no una rama nueva por tarea).
+2. Antes de tocar código: dile a Fercha qué vas a hacer y espera su "GO" explícito.
+3. Después del cambio: corre `npm run typecheck` y `npm run build` (con un `.env.local` temporal si hace falta, bórralo después) — nunca subas algo sin validarlo.
+4. Commit + push a `claude/project-diagnosis-q6ch5d`.
+5. `git checkout main && git merge origin/main --ff-only && git merge claude/project-diagnosis-q6ch5d --ff-only && git push origin main`, luego vuelve a la rama de trabajo. Si `main` divergió (alguien más commiteó ahí directo), hacer merge normal en la rama de trabajo primero y luego el fast-forward a `main` — nunca forzar.
+6. No se abren Pull Requests en este repo salvo que Fercha lo pida explícitamente para un caso puntual.
+7. Marcar el bloque como completado en `PENDIENTES_DRIVER_INCIDENT_EVIDENCE.md` cuando corresponda.
 
 ---
 

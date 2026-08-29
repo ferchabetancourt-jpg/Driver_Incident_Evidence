@@ -1,4 +1,6 @@
-# Pendientes vs. Spec
+# Pendientes — Driver Incident Evidence
+
+**Última actualización:** 29 agosto 2026
 
 Checklist vivo de las brechas entre `Driver_Incident_Evidence_App_Master_Spec_v1.0.docx`
 y lo construido hasta ahora. Se actualiza a medida que cerramos puntos o
