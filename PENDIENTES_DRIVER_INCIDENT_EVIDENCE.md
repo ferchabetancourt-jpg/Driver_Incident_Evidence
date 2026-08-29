@@ -72,6 +72,21 @@ app respete el modo claro/oscuro del celular (vía `prefers-color-scheme`
 en CSS). Requiere definir una paleta oscura completa (fondo, navy, teal,
 etc.) — pendiente de decidir colores con Fercha antes de programar.
 
+## 9. Velocidad de carga (solo si hay venta real)
+⬜ Pospuesto a propósito
+
+Fercha reportó que la app tarda en abrir. Causa raíz identificada: en
+cada navegación se valida la sesión contra Supabase (viaje extra a
+internet) y ninguna pantalla queda pre-cargada — todo se genera fresco
+en el servidor en cada visita, y en el plan gratuito de Vercel el
+servidor "se enfría" si no se usa por un rato, haciendo más lento el
+primer arranque después de estar inactivo.
+
+**Decisión de Fercha (29 agosto 2026): no optimizar esto ahora.** Solo
+vale la pena invertir tiempo aquí si el proyecto llega a venderse de
+verdad (más usuarios reales = justifica el trade-off de complejidad
+extra o de plan pago de Vercel/Supabase).
+
 ---
 
 ## Ya resuelto (Fase 0 + ronda de pruebas en vivo)
