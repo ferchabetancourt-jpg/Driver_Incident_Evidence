@@ -123,7 +123,7 @@ export function BlockHeader({ block, stations }: { block: Block; stations: Stati
           type="button"
           aria-label={t.common.edit}
           onClick={() => setEditing(true)}
-          className="flex h-11 w-11 items-center justify-center rounded-full text-2xl text-slate hover:bg-gray-100"
+          className="flex h-12 w-12 items-center justify-center rounded-full bg-brand-50 text-3xl text-brand-700 hover:bg-brand-100"
         >
           ✎
         </button>
