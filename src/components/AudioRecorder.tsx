@@ -5,6 +5,7 @@ import { useLanguage } from "@/lib/i18n/context";
 
 interface AudioRecorderProps {
   onRecorded: (blob: Blob | null) => void;
+  label?: string;
 }
 
 const CANDIDATE_MIME_TYPES = [
@@ -21,7 +22,7 @@ function pickSupportedMimeType(): string | undefined {
   return CANDIDATE_MIME_TYPES.find((type) => MediaRecorder.isTypeSupported(type));
 }
 
-export function AudioRecorder({ onRecorded }: AudioRecorderProps) {
+export function AudioRecorder({ onRecorded, label }: AudioRecorderProps) {
   const { t } = useLanguage();
   const [recording, setRecording] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
@@ -104,7 +105,7 @@ export function AudioRecorder({ onRecorded }: AudioRecorderProps) {
           onClick={startRecording}
           className="rounded-md bg-danger px-4 py-2 text-sm font-medium text-white hover:opacity-90"
         >
-          🎙 {t.incident.record}
+          🎙 {label ?? t.incident.record}
         </button>
       )}
       {recording && (

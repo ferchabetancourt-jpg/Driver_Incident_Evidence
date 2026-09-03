@@ -126,6 +126,9 @@ export interface Dictionary {
     communications: string;
     evidence: string;
     saveChanges: string;
+    recordNarrativeAudio: string;
+    recordCommAudio: string;
+    savedWithComm: string;
   };
   search: {
     title: string;
@@ -259,6 +262,9 @@ export const dictionary: Record<Lang, Dictionary> = {
       communications: "Comunicaciones",
       evidence: "Evidencia",
       saveChanges: "Guardar cambios",
+      recordNarrativeAudio: "Grabar audio del incidente",
+      recordCommAudio: "Grabar audio de la llamada",
+      savedWithComm: "Incidente guardado. También se registró tu comunicación con soporte.",
     },
     search: {
       title: "Buscar incidentes",
@@ -383,6 +389,9 @@ export const dictionary: Record<Lang, Dictionary> = {
       communications: "Communications",
       evidence: "Evidence",
       saveChanges: "Save changes",
+      recordNarrativeAudio: "Record incident audio",
+      recordCommAudio: "Record call audio",
+      savedWithComm: "Incident saved. Your support communication was also logged.",
     },
     search: {
       title: "Search incidents",

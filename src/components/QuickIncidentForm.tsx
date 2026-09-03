@@ -48,6 +48,7 @@ export function QuickIncidentForm({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [savedAt, setSavedAt] = useState<number | null>(null);
+  const [savedComm, setSavedComm] = useState(false);
 
   const needsComm = actionTaken === "called_support" || actionTaken === "emailed_amazon";
 
@@ -104,7 +105,8 @@ export function QuickIncidentForm({
         if (linkError) throw linkError;
       }
 
-      if (needsComm && (commSummary.trim() || commReference.trim() || commAudioBlob)) {
+      const commWasSaved = needsComm && Boolean(commSummary.trim() || commReference.trim() || commAudioBlob);
+      if (commWasSaved) {
         const { error: commError } = await supabase.from("communications").insert({
           incident_id: incident.id,
           type: actionTaken === "called_support" ? "support_call" : "driver_email",
@@ -143,6 +145,7 @@ export function QuickIncidentForm({
       }
 
       setSavedAt(Date.now());
+      setSavedComm(commWasSaved);
       setTba("");
       setActionTaken(null);
       setNarrativeText("");
@@ -245,7 +248,7 @@ export function QuickIncidentForm({
             </button>
           </div>
           {narrativeMode === "audio" ? (
-            <AudioRecorder onRecorded={setAudioBlob} />
+            <AudioRecorder onRecorded={setAudioBlob} label={t.incident.recordNarrativeAudio} />
           ) : (
             <textarea
               value={narrativeText}
@@ -286,7 +289,7 @@ export function QuickIncidentForm({
               rows={2}
               className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
             />
-            <AudioRecorder onRecorded={setCommAudioBlob} />
+            <AudioRecorder onRecorded={setCommAudioBlob} label={t.incident.recordCommAudio} />
             <input
               value={commReference}
               onChange={(e) => setCommReference(e.target.value)}
@@ -305,7 +308,6 @@ export function QuickIncidentForm({
           <input
             type="file"
             accept="image/*"
-            capture="environment"
             onChange={(e) => setPhotoFile(e.target.files?.[0] ?? null)}
             className="mt-1 w-full text-sm"
           />
@@ -313,7 +315,9 @@ export function QuickIncidentForm({
       </div>
 
       {error && <p className="text-sm text-red-600">{error}</p>}
-      {savedAt && !error && <p className="text-sm text-green-700">{t.incident.saved}</p>}
+      {savedAt && !error && (
+        <p className="text-sm text-green-700">{savedComm ? t.incident.savedWithComm : t.incident.saved}</p>
+      )}
 
       <button
         type="button"
