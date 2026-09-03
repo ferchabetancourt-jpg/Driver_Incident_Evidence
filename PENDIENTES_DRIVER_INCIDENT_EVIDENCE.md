@@ -118,3 +118,10 @@ incrustada.
 - Identidad visual: mayor tamaño de letra y contraste en toda la app,
   para lectura rápida con sol/manejando (detectado en bloque de prueba
   del 29 agosto 2026) ✅
+- Modal de "Incidente rápido" reorganizado por secciones (Paquete / Qué
+  pasó / Qué hiciste / Evidencia), sin quitar campos ✅
+- Comunicación con Soporte unificada: la cajita del modal ahora también
+  graba audio, y el formulario de "agregar comunicación" del detalle
+  del incidente solo aparece si todavía no hay ninguna registrada ✅
+- Editar un incidente ya guardado (categoría, acción tomada, texto de
+  la narrativa) desde el detalle del incidente ✅
