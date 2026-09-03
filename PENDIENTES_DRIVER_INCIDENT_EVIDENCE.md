@@ -87,6 +87,15 @@ vale la pena invertir tiempo aquí si el proyecto llega a venderse de
 verdad (más usuarios reales = justifica el trade-off de complejidad
 extra o de plan pago de Vercel/Supabase).
 
+## 10. Foto por link en vez de subir archivo
+⬜ Pospuesto (Fercha: "deja el link y la foto" — se hace después)
+
+Poder pegar un link (ej. a una foto guardada en Drive) como evidencia,
+en vez de subir siempre el archivo directo desde el celular. Requiere
+agregar "link" como tipo válido de evidencia (migración chica) y que el
+detalle del incidente lo muestre como enlace clicable en vez de imagen
+incrustada.
+
 ---
 
 ## Ya resuelto (Fase 0 + ronda de pruebas en vivo)
