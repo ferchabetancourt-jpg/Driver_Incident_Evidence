@@ -16,6 +16,12 @@ import { AudioRecorder } from "./AudioRecorder";
 
 type NarrativeMode = "audio" | "text";
 
+function audioUpload(blob: Blob, name: string) {
+  const mime = blob.type || "audio/webm";
+  const extension = mime.split("/")[1]?.split(";")[0] || "webm";
+  return { type: "audio" as const, file: blob, mime, name: `${name}.${extension}` };
+}
+
 export function QuickIncidentForm({
   blockId,
   onSaved,
@@ -38,6 +44,7 @@ export function QuickIncidentForm({
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [commSummary, setCommSummary] = useState("");
   const [commReference, setCommReference] = useState("");
+  const [commAudioBlob, setCommAudioBlob] = useState<Blob | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [savedAt, setSavedAt] = useState<number | null>(null);
@@ -97,7 +104,7 @@ export function QuickIncidentForm({
         if (linkError) throw linkError;
       }
 
-      if (needsComm && (commSummary.trim() || commReference.trim())) {
+      if (needsComm && (commSummary.trim() || commReference.trim() || commAudioBlob)) {
         const { error: commError } = await supabase.from("communications").insert({
           incident_id: incident.id,
           type: actionTaken === "called_support" ? "support_call" : "driver_email",
@@ -109,9 +116,10 @@ export function QuickIncidentForm({
 
       const uploads: { type: "audio" | "photo"; file: Blob; mime: string; name: string }[] = [];
       if (narrativeMode === "audio" && audioBlob) {
-        const mime = audioBlob.type || "audio/webm";
-        const extension = mime.split("/")[1]?.split(";")[0] || "webm";
-        uploads.push({ type: "audio", file: audioBlob, mime, name: `incident-audio.${extension}` });
+        uploads.push(audioUpload(audioBlob, "incident-audio"));
+      }
+      if (needsComm && commAudioBlob) {
+        uploads.push(audioUpload(commAudioBlob, "communication-audio"));
       }
       if (photoFile) {
         uploads.push({ type: "photo", file: photoFile, mime: photoFile.type, name: photoFile.name });
@@ -142,6 +150,7 @@ export function QuickIncidentForm({
       setPhotoFile(null);
       setCommSummary("");
       setCommReference("");
+      setCommAudioBlob(null);
       router.refresh();
       onSaved?.();
     } catch (err) {
@@ -152,7 +161,7 @@ export function QuickIncidentForm({
   }
 
   return (
-    <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4">
+    <div className="space-y-5 rounded-lg border border-gray-200 bg-white p-4">
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-medium text-gray-700">{t.incident.quickCapture}</h2>
         {onCancel && (
@@ -162,8 +171,9 @@ export function QuickIncidentForm({
         )}
       </div>
 
-      <div>
-        <p className="mb-1 text-sm text-gray-600">{t.incident.scope}</p>
+      {/* Paquete */}
+      <div className="space-y-2 border-t border-gray-100 pt-4 first:border-t-0 first:pt-0">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate">{t.incident.sectionPackage}</p>
         <div className="flex gap-2">
           <button
             type="button"
@@ -184,36 +194,73 @@ export function QuickIncidentForm({
             {t.incident.scopeBlock}
           </button>
         </div>
+        {scope === "package" && (
+          <div>
+            <label className="block text-sm text-gray-600">{t.incident.tba}</label>
+            <input
+              value={tba}
+              onChange={(e) => setTba(e.target.value)}
+              className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2"
+            />
+          </div>
+        )}
       </div>
 
-      {scope === "package" && (
+      {/* Qué pasó */}
+      <div className="space-y-2 border-t border-gray-100 pt-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate">{t.incident.sectionWhatHappened}</p>
         <div>
-          <label className="block text-sm text-gray-600">{t.incident.tba}</label>
-          <input
-            value={tba}
-            onChange={(e) => setTba(e.target.value)}
+          <label className="block text-sm text-gray-600">{t.incident.category}</label>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value as IncidentCategory)}
             className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2"
-          />
+          >
+            {INCIDENT_CATEGORIES.map((cat) => (
+              <option key={cat} value={cat}>
+                {CATEGORY_LABELS[cat][lang]}
+              </option>
+            ))}
+          </select>
         </div>
-      )}
-
-      <div>
-        <label className="block text-sm text-gray-600">{t.incident.category}</label>
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value as IncidentCategory)}
-          className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2"
-        >
-          {INCIDENT_CATEGORIES.map((cat) => (
-            <option key={cat} value={cat}>
-              {CATEGORY_LABELS[cat][lang]}
-            </option>
-          ))}
-        </select>
+        <div>
+          <div className="mb-1 flex gap-2">
+            <button
+              type="button"
+              onClick={() => setNarrativeMode("audio")}
+              className={`rounded-md px-3 py-1.5 text-sm ${
+                narrativeMode === "audio" ? "bg-navy text-white" : "bg-gray-100 text-gray-700"
+              }`}
+            >
+              {t.incident.narrativeAudio}
+            </button>
+            <button
+              type="button"
+              onClick={() => setNarrativeMode("text")}
+              className={`rounded-md px-3 py-1.5 text-sm ${
+                narrativeMode === "text" ? "bg-navy text-white" : "bg-gray-100 text-gray-700"
+              }`}
+            >
+              {t.incident.narrativeText}
+            </button>
+          </div>
+          {narrativeMode === "audio" ? (
+            <AudioRecorder onRecorded={setAudioBlob} />
+          ) : (
+            <textarea
+              value={narrativeText}
+              onChange={(e) => setNarrativeText(e.target.value)}
+              placeholder={t.incident.narrativePlaceholder}
+              rows={3}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+            />
+          )}
+        </div>
       </div>
 
-      <div>
-        <p className="mb-1 text-sm text-gray-600">{t.incident.actionTaken}</p>
+      {/* Qué hiciste */}
+      <div className="space-y-2 border-t border-gray-100 pt-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate">{t.incident.sectionWhatYouDid}</p>
         <div className="flex flex-wrap gap-2">
           {ACTION_TAKEN_OPTIONS.map((action) => (
             <button
@@ -228,70 +275,41 @@ export function QuickIncidentForm({
             </button>
           ))}
         </div>
-      </div>
 
-      {needsComm && (
-        <div className="space-y-2 rounded-md bg-brand-50 p-3">
-          <p className="text-xs font-medium uppercase text-slate">{t.incident.addCommunication}</p>
-          <textarea
-            value={commSummary}
-            onChange={(e) => setCommSummary(e.target.value)}
-            placeholder={t.incident.commSummary}
-            rows={2}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-          />
-          <input
-            value={commReference}
-            onChange={(e) => setCommReference(e.target.value)}
-            placeholder={t.incident.commReference}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-          />
-        </div>
-      )}
-
-      <div>
-        <div className="mb-1 flex gap-2">
-          <button
-            type="button"
-            onClick={() => setNarrativeMode("audio")}
-            className={`rounded-md px-3 py-1.5 text-sm ${
-              narrativeMode === "audio" ? "bg-navy text-white" : "bg-gray-100 text-gray-700"
-            }`}
-          >
-            {t.incident.narrativeAudio}
-          </button>
-          <button
-            type="button"
-            onClick={() => setNarrativeMode("text")}
-            className={`rounded-md px-3 py-1.5 text-sm ${
-              narrativeMode === "text" ? "bg-navy text-white" : "bg-gray-100 text-gray-700"
-            }`}
-          >
-            {t.incident.narrativeText}
-          </button>
-        </div>
-        {narrativeMode === "audio" ? (
-          <AudioRecorder onRecorded={setAudioBlob} />
-        ) : (
-          <textarea
-            value={narrativeText}
-            onChange={(e) => setNarrativeText(e.target.value)}
-            placeholder={t.incident.narrativePlaceholder}
-            rows={3}
-            className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
-          />
+        {needsComm && (
+          <div className="space-y-2 rounded-md bg-brand-50 p-3">
+            <p className="text-xs font-medium uppercase text-slate">{t.incident.addCommunication}</p>
+            <textarea
+              value={commSummary}
+              onChange={(e) => setCommSummary(e.target.value)}
+              placeholder={t.incident.commSummary}
+              rows={2}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+            />
+            <AudioRecorder onRecorded={setCommAudioBlob} />
+            <input
+              value={commReference}
+              onChange={(e) => setCommReference(e.target.value)}
+              placeholder={t.incident.commReference}
+              className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+            />
+          </div>
         )}
       </div>
 
-      <div>
-        <label className="block text-sm text-gray-600">{t.incident.photo}</label>
-        <input
-          type="file"
-          accept="image/*"
-          capture="environment"
-          onChange={(e) => setPhotoFile(e.target.files?.[0] ?? null)}
-          className="mt-1 w-full text-sm"
-        />
+      {/* Evidencia */}
+      <div className="space-y-2 border-t border-gray-100 pt-4">
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate">{t.incident.sectionEvidence}</p>
+        <div>
+          <label className="block text-sm text-gray-600">{t.incident.photo}</label>
+          <input
+            type="file"
+            accept="image/*"
+            capture="environment"
+            onChange={(e) => setPhotoFile(e.target.files?.[0] ?? null)}
+            className="mt-1 w-full text-sm"
+          />
+        </div>
       </div>
 
       {error && <p className="text-sm text-red-600">{error}</p>}

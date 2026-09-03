@@ -86,6 +86,10 @@ export interface Dictionary {
   };
   incident: {
     quickCapture: string;
+    sectionPackage: string;
+    sectionWhatHappened: string;
+    sectionWhatYouDid: string;
+    sectionEvidence: string;
     scope: string;
     scopePackage: string;
     scopeBlock: string;
@@ -121,6 +125,7 @@ export interface Dictionary {
     commSave: string;
     communications: string;
     evidence: string;
+    saveChanges: string;
   };
   search: {
     title: string;
@@ -214,6 +219,10 @@ export const dictionary: Record<Lang, Dictionary> = {
     },
     incident: {
       quickCapture: "Incidente rápido",
+      sectionPackage: "Paquete",
+      sectionWhatHappened: "Qué pasó",
+      sectionWhatYouDid: "Qué hiciste",
+      sectionEvidence: "Evidencia",
       scope: "¿A qué aplica este incidente?",
       scopePackage: "Un paquete / TBA específico",
       scopeBlock: "Todo el bloque",
@@ -249,6 +258,7 @@ export const dictionary: Record<Lang, Dictionary> = {
       commSave: "Guardar comunicación",
       communications: "Comunicaciones",
       evidence: "Evidencia",
+      saveChanges: "Guardar cambios",
     },
     search: {
       title: "Buscar incidentes",
@@ -333,6 +343,10 @@ export const dictionary: Record<Lang, Dictionary> = {
     },
     incident: {
       quickCapture: "Quick incident",
+      sectionPackage: "Package",
+      sectionWhatHappened: "What happened",
+      sectionWhatYouDid: "What you did",
+      sectionEvidence: "Evidence",
       scope: "What does this incident apply to?",
       scopePackage: "A specific package / TBA",
       scopeBlock: "The whole block",
@@ -368,6 +382,7 @@ export const dictionary: Record<Lang, Dictionary> = {
       commSave: "Save communication",
       communications: "Communications",
       evidence: "Evidence",
+      saveChanges: "Save changes",
     },
     search: {
       title: "Search incidents",
