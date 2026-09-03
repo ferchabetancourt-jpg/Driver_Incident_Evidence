@@ -164,7 +164,7 @@ export function QuickIncidentForm({
   }
 
   return (
-    <div className="space-y-5 rounded-lg border border-gray-200 bg-white p-4">
+    <div className="space-y-3 rounded-lg border border-gray-200 bg-white p-4">
       <div className="flex items-center justify-between">
         <h2 className="text-sm font-medium text-gray-700">{t.incident.quickCapture}</h2>
         {onCancel && (
@@ -175,7 +175,7 @@ export function QuickIncidentForm({
       </div>
 
       {/* Paquete */}
-      <div className="space-y-2 border-t border-gray-100 pt-4 first:border-t-0 first:pt-0">
+      <div className="space-y-2 rounded-lg border border-gray-200 bg-gray-50 p-3">
         <p className="text-xs font-semibold uppercase tracking-wide text-slate">{t.incident.sectionPackage}</p>
         <div className="flex gap-2">
           <button
@@ -210,7 +210,7 @@ export function QuickIncidentForm({
       </div>
 
       {/* Qué pasó */}
-      <div className="space-y-2 border-t border-gray-100 pt-4">
+      <div className="space-y-2 rounded-lg border border-gray-200 bg-gray-50 p-3">
         <p className="text-xs font-semibold uppercase tracking-wide text-slate">{t.incident.sectionWhatHappened}</p>
         <div>
           <label className="block text-sm text-gray-600">{t.incident.category}</label>
@@ -262,7 +262,7 @@ export function QuickIncidentForm({
       </div>
 
       {/* Qué hiciste */}
-      <div className="space-y-2 border-t border-gray-100 pt-4">
+      <div className="space-y-2 rounded-lg border border-gray-200 bg-gray-50 p-3">
         <p className="text-xs font-semibold uppercase tracking-wide text-slate">{t.incident.sectionWhatYouDid}</p>
         <div className="flex flex-wrap gap-2">
           {ACTION_TAKEN_OPTIONS.map((action) => (
@@ -301,7 +301,7 @@ export function QuickIncidentForm({
       </div>
 
       {/* Evidencia */}
-      <div className="space-y-2 border-t border-gray-100 pt-4">
+      <div className="space-y-2 rounded-lg border border-gray-200 bg-gray-50 p-3">
         <p className="text-xs font-semibold uppercase tracking-wide text-slate">{t.incident.sectionEvidence}</p>
         <div>
           <label className="block text-sm text-gray-600">{t.incident.photo}</label>
