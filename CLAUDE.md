@@ -50,12 +50,22 @@ Este proyecto sí aplica la sección completa (tiene marca, identidad visual pro
 
 ## C) Flujo técnico — verificar antes de pushear
 
+- **Antes de decir "ya puedes probarlo en el carro/en un bloque real":** correr la app localmente con datos de ejemplo (inventados, no los reales de Fercha), tomar captura de pantalla del cambio, y mandarla en el chat. Solo dar la app por lista para prueba real después de que la captura se vea bien — nunca mandar a Fercha a descubrir un bug visual en medio de una entrega real cuando se pudo ver antes con una captura. (Decisión del 9 sept 2026, después de varias rondas de bugs visuales detectados en vivo.)
 - Corre el proyecto localmente (o el equivalente según el stack) y verifica visualmente antes de reportar algo como listo — con capturas en mobile y desktop si es una interfaz visual.
 - Si hay texto/elementos superpuestos a una imagen o ilustración: no calcules posición "a ojo" desde una captura chica — verifica en zoom contra el asset real antes de fijar coordenadas.
 - Prueba con datos reales antes de dar una feature por terminada, no solo con datos de ejemplo — bugs de deduplicación, cálculos o idioma a veces solo aparecen con datos reales.
 - Audita cualquier `PLACEHOLDER` antes de dar algo por listo. Un placeholder dentro de un atributo vivo (`href`, `src`, config) no es una nota — es un bug real esperando a que alguien lo toque.
 - Si el proyecto tiene base de datos real con datos de usuarios reales: trátalo con el mismo cuidado que producción — nunca corras una migración o cambio de esquema sin GO explícito, y prefiere cambios reversibles/aditivos sobre destructivos.
 - Commits descriptivos explicando el "por qué", no solo el "qué".
+
+---
+
+## D bis) Respaldo de la base de datos bajo demanda
+
+Decisión del 9 sept 2026: en vez de automatizar un respaldo nocturno (requiere crear un repo/infraestructura nueva, algo que Fercha pidió explícitamente evitar por ahora), el respaldo es manual y bajo pedido:
+
+- Cuando Fercha diga "haz un respaldo" (o similar), exporto los datos de Supabase y se los subo a su Google Drive como archivo — usando el acceso a Supabase y Drive ya disponible en la sesión, sin crear repos, secretos, ni automatizaciones nuevas.
+- Si en el futuro el proyecto crece (más usuarios reales, ver punto 9 de `PENDIENTES_DRIVER_INCIDENT_EVIDENCE.md`), ahí sí vale la pena evaluar un respaldo automático.
 
 ---
 
