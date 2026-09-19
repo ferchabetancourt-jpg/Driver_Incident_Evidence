@@ -1,6 +1,6 @@
 # Pendientes — Driver Incident Evidence
 
-**Última actualización:** 29 agosto 2026
+**Última actualización:** 19 septiembre 2026
 
 Checklist vivo de las brechas entre `Driver_Incident_Evidence_App_Master_Spec_v1.0.docx`
 y lo construido hasta ahora. Se actualiza a medida que cerramos puntos o
@@ -95,6 +95,51 @@ en vez de subir siempre el archivo directo desde el celular. Requiere
 agregar "link" como tipo válido de evidencia (migración chica) y que el
 detalle del incidente lo muestre como enlace clicable en vez de imagen
 incrustada.
+
+## 11. Columna `duration_minutes` en bloques, sin usar
+⬜ Pospuesto (Fercha, 19 sept 2026: la app se va a rediseñar más adelante
+porque no es muy funcional — se revisa ahí)
+
+La columna existe en la base de datos y en el tipo `Block`, pero ningún
+formulario la muestra ni la permite llenar — hoy es dato muerto.
+Encontrado en la auditoría de spec-vs-código del 19 sept 2026.
+
+## 12. Pantalla de Cuenta / Configuración
+⬜ Pospuesto (Fercha, 19 sept 2026: solo si algún día se comercializa)
+
+El spec original pedía una pantalla de "Settings / Language / Account"
+(cambiar contraseña, exportar/borrar datos). Hoy el idioma y cerrar
+sesión están en el menú superior, pero no hay una pantalla de cuenta
+dedicada. Relevante sobre todo si otros drivers empiezan a usar la app
+de verdad. Encontrado en la auditoría de spec-vs-código del 19 sept 2026.
+
+## 13. Ubicación GPS del incidente
+⬜ Pendiente
+
+El spec (§12) menciona capturar ubicación GPS del incidente "si el
+permiso está dado y es legalmente apropiado". No implementado. Es
+sensible en privacidad — definir con Fercha si vale la pena antes de
+programar nada. Encontrado en la auditoría de spec-vs-código del 19
+sept 2026.
+
+## 14. Pantalla de lista de TBA/Paquetes
+⬜ Pendiente
+
+El spec (§21) pedía una pantalla propia para ver/buscar los TBA de un
+bloque. Hoy los paquetes solo existen implícitamente dentro de cada
+incidente — no hay una vista que los liste todos. Baja prioridad
+porque la búsqueda por TBA ya cubre lo esencial. Encontrado en la
+auditoría de spec-vs-código del 19 sept 2026.
+
+---
+
+## Descartado (decisión explícita de Fercha — no reabrir sin que ella lo pida)
+
+- **Estado "resuelto" en incidentes**: el campo `status` (open/resolved)
+  existe en la base de datos pero no tiene ningún uso en la app — se
+  decidió no implementarlo. (19 sept 2026)
+- **"Apodo" de estación**: el spec original lo pedía como campo opcional;
+  con nombre + código de estación ya alcanza. (19 sept 2026)
 
 ---
 
